@@ -8,12 +8,14 @@ public class Usuario {
 
     // Construtores
     
+    // Caso não precise do ID
     public Usuario(String username, String senha, String nivelAcesso) {
         this.username = username;
         this.senha = senha;
         this.nivelAcesso = nivelAcesso;
     }
 
+    // Caso necessite do ID
     public Usuario(int id, String username, String senha, String nivelAcesso) {
         this.id = id;
         this.username = username;

@@ -6,6 +6,7 @@ import java.sql.SQLException;
 public class ConnectionFactory {
     public Connection getConnection(){
         try {
+            // Padronizar a conexão com o banco de dados, evitar repetição de código em toda classe DAO
             String url = "jdbc:sqlite:../banco.db";
             return DriverManager.getConnection(url);
         } catch (SQLException e) {
