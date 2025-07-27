@@ -162,7 +162,7 @@ public class TelaPrincipal extends JFrame{
         titulo.setForeground(Color.WHITE);
         titulo.setFont(new Font("SansSerif", Font.BOLD, 16));
 
-        JLabel usuario = new JLabel("Usuário");
+        JLabel usuario = new JLabel(nomeUsuario);
         usuario.setForeground(Color.WHITE);
         usuario.setFont(new Font("SansSerif", Font.BOLD, 16));
 
