@@ -24,6 +24,7 @@ import java.util.Map;
 
 public class TelaPrincipal extends JFrame{
     private String nomeUsuario;
+    private int idUsuario;
     private JPanel navBar;
     private JPanel menuLateral;
     private JPanel painelPrincipal;
@@ -31,9 +32,10 @@ public class TelaPrincipal extends JFrame{
     private Map<String, JPanel> painelRegistradores = new HashMap<>();
 
 
-    public TelaPrincipal(String nomeUsuario) {
+    public TelaPrincipal(String nomeUsuario, int idUsuario) {
         super("Gestão de Espaços Academicos");
         this.nomeUsuario = nomeUsuario;
+        this.idUsuario = idUsuario;
         configurarJanela();
         configurarPaineis();
         montarLayout();
@@ -175,7 +177,7 @@ public class TelaPrincipal extends JFrame{
     }
 
     public void registrarPaineis() {
-        painelRegistradores.put("Home", new PainelHome(nomeUsuario));
+        painelRegistradores.put("Home", new PainelHome(nomeUsuario, idUsuario));
         painelRegistradores.put("Gerenciar Espaços", new PainelGerenciarEspacos());
         painelRegistradores.put("Reservas", new PainelReservas());
         painelRegistradores.put("Usuários", new PainelUsuarios());

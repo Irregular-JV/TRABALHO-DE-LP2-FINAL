@@ -45,7 +45,7 @@ public class EntrarController implements ActionListener {
         if (usuarioDoBanco != null && usuarioDoBanco.getSenha().equals(senha)) {
             view.mostrarMensagem("Login bem-sucedido!");
             view.dispose();
-            new TelaPrincipal(usuarioDoBanco.getUsername()).setVisible(true);
+            new TelaPrincipal(usuarioDoBanco.getUsername(), usuarioDoBanco.getId()).setVisible(true);
         } else {
             view.mostrarMensagem("Usuário ou senha inválidos.");
         }

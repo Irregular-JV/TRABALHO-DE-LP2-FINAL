@@ -5,16 +5,17 @@ import model.ReservaDAO;
 
 import javax.swing.*;
 import java.awt.*;
-import java.time.LocalDateTime;
 
 public class TelaNovaReserva extends JDialog {
     private JTextField campoIdEspaco;
-    private JTextField campoIdUsuario;
+    private int idUsuario;
     private JTextField campoInicio;
     private JTextField campoFim;
+    private PainelReservas painelReservas;
 
-    public TelaNovaReserva(JFrame parent) {
+    public TelaNovaReserva(JFrame parent, int idUsuario) {
         super(parent, "Nova Reserva", true);
+        this.idUsuario = idUsuario;
         setSize(400, 300);
         setLocationRelativeTo(parent);
         setLayout(new GridLayout(5, 2, 10, 10));
@@ -23,15 +24,11 @@ public class TelaNovaReserva extends JDialog {
         campoIdEspaco = new JTextField();
         add(campoIdEspaco);
 
-        add(new JLabel("ID do Usuário:"));
-        campoIdUsuario = new JTextField();
-        add(campoIdUsuario);
-
-        add(new JLabel("Início (yyyy-MM-ddTHH:mm):"));
+        add(new JLabel("Início (MM-dd-HH):"));
         campoInicio = new JTextField();
         add(campoInicio);
 
-        add(new JLabel("Fim (yyyy-MM-ddTHH:mm):"));
+        add(new JLabel("Fim (MM-dd-HH):"));
         campoFim = new JTextField();
         add(campoFim);
 
@@ -49,9 +46,8 @@ public class TelaNovaReserva extends JDialog {
     private void fazerReserva() {
         try {
             int idEspaco = Integer.parseInt(campoIdEspaco.getText());
-            int idUsuario = Integer.parseInt(campoIdUsuario.getText());
-            LocalDateTime inicio = LocalDateTime.parse(campoInicio.getText());
-            LocalDateTime fim = LocalDateTime.parse(campoFim.getText());
+            String inicio = campoInicio.getText();
+            String fim = campoFim.getText();
 
             Reserva reserva = new Reserva(idEspaco, idUsuario, inicio, fim);
             ReservaDAO dao = new ReservaDAO();

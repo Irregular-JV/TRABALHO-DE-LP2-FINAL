@@ -6,10 +6,10 @@ public class Reserva {
     private int id;
     private int idEspaco;
     private int idUsuario;
-    private LocalDateTime inicio;
-    private LocalDateTime fim;
+    private String inicio;
+    private String fim;
 
-    public Reserva(int idEspaco, int idUsuario, LocalDateTime inicio, LocalDateTime fim) {
+    public Reserva(int idEspaco, int idUsuario, String inicio, String fim) {
         this.idEspaco = idEspaco;
         this.idUsuario = idUsuario;
         this.inicio = inicio;
@@ -28,11 +28,11 @@ public class Reserva {
         return idUsuario;
     }
 
-    public LocalDateTime getInicio() {
+    public String getInicio() {
         return inicio;
     }
 
-    public LocalDateTime getFim() {
+    public String getFim() {
         return fim;
     }
 

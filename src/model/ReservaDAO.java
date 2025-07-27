@@ -12,15 +12,15 @@ public class ReservaDAO {
         this.connection = new ConnectionFactory().getConnection();
     }
 
-    public boolean horarioDisponivel(int idEspaco, LocalDateTime inicio, LocalDateTime fim) {
+    public boolean horarioDisponivel(int idEspaco, String inicio, String fim) {
         String sql = "SELECT * FROM reservas WHERE id_espaco = ? AND " +
                      "(inicio < ? AND fim > ?)";
 
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setInt(1, idEspaco);
-            stmt.setTimestamp(2, Timestamp.valueOf(fim));
-            stmt.setTimestamp(3, inicio);
+            stmt.setString(2, fim);
+            stmt.setString(3, inicio);
 
             ResultSet rs = stmt.executeQuery();
             return !rs.next(); // Se não houver conflito, está disponível
@@ -42,8 +42,8 @@ public class ReservaDAO {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setInt(1, reserva.getIdEspaco());
             stmt.setInt(2, reserva.getIdUsuario());
-            stmt.setTimestamp(3, Timestamp.valueOf(reserva.getInicio()));
-            stmt.setTimestamp(4, Timestamp.valueOf(reserva.getFim()));
+            stmt.setString(3, reserva.getInicio());
+            stmt.setString(4, reserva.getFim());
             stmt.executeUpdate();
             return true;
 
@@ -66,8 +66,8 @@ public class ReservaDAO {
                 Reserva r = new Reserva(
                     rs.getInt("id_espaco"),
                     rs.getInt("id_usuario"),
-                    rs.getTimestamp("inicio").toLocalDateTime(),
-                    rs.getTimestamp("fim").toLocalDateTime()
+                    rs.getString("inicio"),
+                    rs.getString("fim")
                 );
                 r.setId(rs.getInt("id"));
                 reservas.add(r);
