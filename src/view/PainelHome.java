@@ -135,7 +135,7 @@ public class PainelHome extends JPanel {
         btn.addActionListener(e -> {
             if (nome.equals("Nova Reserva")) {
                 JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
-                new TelaNovaReserva(parent, idUsuario); // 🔧 aqui passa a referência
+                new TelaNovaReserva(parent, idUsuario);
             }
         });
         return btn;
