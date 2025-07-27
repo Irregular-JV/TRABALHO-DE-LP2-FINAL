@@ -132,6 +132,13 @@ public class PainelHome extends JPanel {
         ));
         btn.setFocusPainted(false);
         btn.setBackground(Color.WHITE);
+
+        btn.addActionListener(e -> {
+            if (nome.equals("Nova Reserva")) {
+                JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
+                new TelaNovaReserva(parent);
+            }
+        });
         return btn;
     }
 }

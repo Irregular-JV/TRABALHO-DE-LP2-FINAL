@@ -86,7 +86,7 @@ public class TelaPrincipal extends JFrame{
             });
 
             // Evento de clique: marcar como ativo
-            btn.addActionListener(_ -> {
+            btn.addActionListener(evt -> {
 
                 if(nome.equals("Sair")) {
                     this.dispose(); //Fecha a tela principal
