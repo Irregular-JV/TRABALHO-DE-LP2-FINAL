@@ -36,7 +36,7 @@ O objetivo é aplicar conceitos de programação orientada a objetos, persistên
 
 * **Linguagem:** Java (JDK 17+)
 * **Interface Gráfica:** Java Swing 
-* **Banco de Dados:** SQLite (pode ser adaptado para MySQL) 
+* **Banco de Dados:** SQLite 
 * **Arquitetura:** Model-View-Controller (MVC) 
 * **Conceitos:** Programação Orientada a Objetos (POO) 
 
