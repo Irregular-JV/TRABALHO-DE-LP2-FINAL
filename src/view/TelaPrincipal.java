@@ -24,16 +24,19 @@ import java.util.Map;
 
 public class TelaPrincipal extends JFrame{
     private String nomeUsuario;
+    private int idUsuario;
     private JPanel navBar;
     private JPanel menuLateral;
     private JPanel painelPrincipal;
     private JButton botaoAtivo;
     private Map<String, JPanel> painelRegistradores = new HashMap<>();
+    private PainelReservas painelReservas;
 
 
-    public TelaPrincipal(String nomeUsuario) {
+    public TelaPrincipal(String nomeUsuario, int idUsuario) {
         super("Gestão de Espaços Academicos");
         this.nomeUsuario = nomeUsuario;
+        this.idUsuario = idUsuario;
         configurarJanela();
         configurarPaineis();
         montarLayout();
@@ -86,7 +89,7 @@ public class TelaPrincipal extends JFrame{
             });
 
             // Evento de clique: marcar como ativo
-            btn.addActionListener(_ -> {
+            btn.addActionListener(evt -> {
 
                 if(nome.equals("Sair")) {
                     this.dispose(); //Fecha a tela principal
@@ -175,9 +178,16 @@ public class TelaPrincipal extends JFrame{
     }
 
     public void registrarPaineis() {
-        painelRegistradores.put("Home", new PainelHome(nomeUsuario));
+        painelReservas = new PainelReservas();
+        PainelHome home = new PainelHome(nomeUsuario, idUsuario, () -> {
+            new TelaNovaReserva(this, idUsuario, () -> painelReservas.atualizarReservas());
+        });
+
+
+
+        painelRegistradores.put("Home", home);
         painelRegistradores.put("Gerenciar Espaços", new PainelGerenciarEspacos());
-        painelRegistradores.put("Reservas", new PainelReservas());
+        painelRegistradores.put("Reservas", painelReservas);
         painelRegistradores.put("Usuários", new PainelUsuarios());
         painelRegistradores.put("Relatórios", new PainelRelatorios());
         painelRegistradores.put("Logs", new PainelLogs());

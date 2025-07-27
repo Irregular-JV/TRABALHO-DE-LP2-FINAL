@@ -5,9 +5,14 @@ import java.awt.*;
 
 public class PainelHome extends JPanel {
     private String nome;
+    private int idUsuario;
+    private final Runnable onNovaReserva;
 
-    public PainelHome(String nome) {
+    public PainelHome(String nome, int idUsuario, Runnable onNovaReserva) {
         this.nome = nome;
+        this.idUsuario = idUsuario;
+
+        this.onNovaReserva = onNovaReserva;
         this.setLayout(new BorderLayout());
         this.setBackground(Color.WHITE);
 
@@ -71,10 +76,7 @@ public class PainelHome extends JPanel {
 
         painelCentro.add(painelRodape);
 
-        //Ajuste: limitar a altura do centro para evitar que ele estique verticalmente
-        painelCentro.setMaximumSize(new Dimension(1000, painelCentro.getPreferredSize().height));
-
-        //Envolver em wrapper para impedir expansão vertical
+        // Envolver o centro para evitar expansão vertical
         JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         wrapper.setBackground(Color.WHITE);
         wrapper.add(painelCentro);
@@ -132,6 +134,14 @@ public class PainelHome extends JPanel {
         ));
         btn.setFocusPainted(false);
         btn.setBackground(Color.WHITE);
+
+        btn.addActionListener(e -> {
+            if (nome.equals("Nova Reserva")) {
+                //JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
+                //new TelaNovaReserva(parent, idUsuario);
+                onNovaReserva.run();
+            }
+        });
         return btn;
     }
 }
