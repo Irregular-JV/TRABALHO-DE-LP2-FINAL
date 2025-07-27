@@ -84,7 +84,15 @@ public class PainelReservas extends JPanel {
         lblUsuario.setForeground(Color.DARK_GRAY);
         lblUsuario.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JLabel lblHorario = new JLabel("Horário: " + reserva.getInicio() + " até " + reserva.getFim());
+        // Processa datas
+        String[] inicioParts = reserva.getInicio().split("-");
+        String[] fimParts = reserva.getFim().split("-");
+
+        String data = inicioParts[1] + "/" + inicioParts[0]; // dd/MM
+        String horaInicio = inicioParts[2] + ":00";
+        String horaFim = fimParts[2] + ":00";
+
+        JLabel lblHorario = new JLabel("Reserva dia " + data + " das " + horaInicio + " até " + horaFim);
         lblHorario.setFont(new Font("SansSerif", Font.PLAIN, 14));
         lblHorario.setForeground(Color.DARK_GRAY);
         lblHorario.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -96,5 +104,6 @@ public class PainelReservas extends JPanel {
         card.add(lblHorario);
 
         return card;
-    }
+    }   
+
 }
