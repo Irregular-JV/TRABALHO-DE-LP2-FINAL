@@ -4,8 +4,8 @@ public class Laboratorio extends Espaco{
     public String tipoLaboratorio;
     public int quantidadeComputadores;
 
-    public Laboratorio(int id, int capacidade, String localizacao, boolean disponivel, String tipoLaboratorio, int quantidadeComputadores){
-        super(id, capacidade, localizacao, disponivel);
+    public Laboratorio(int id, int capacidade, String localizacao, String tipoLaboratorio, int quantidadeComputadores){
+        super(id, capacidade, localizacao);
         this.setTipoLaboratorio(tipoLaboratorio);
         this.setQuantidadeComputadores(quantidadeComputadores);
     }               

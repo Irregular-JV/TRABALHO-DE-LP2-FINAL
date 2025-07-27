@@ -3,8 +3,8 @@ package model;
 public class SalaDeReuniao extends Espaco{
     public String tipoMesa;
 
-    public SalaDeReuniao(int id, int capacidade, String localizacao, boolean disponivel, String tipoMesa){
-        super(id, capacidade, localizacao, disponivel);
+    public SalaDeReuniao(int id, int capacidade, String localizacao, String tipoMesa){
+        super(id, capacidade, localizacao);
         this.setTipoMesa(tipoMesa);
     }
 

@@ -4,13 +4,11 @@ public abstract class Espaco {
     public int id;
     public int capacidade;
     public String localizacao;
-    public boolean disponivel;
 
-    public Espaco(int id, int capacidade, String localizacao, boolean disponivel){
+    public Espaco(int id, int capacidade, String localizacao){
         this.setId(id);
         this.setCapacidade(capacidade);
         this.setLocalizacao(localizacao);
-        this.setDisponivel(disponivel);
     }
 
     public void setId(int id){
@@ -25,10 +23,6 @@ public abstract class Espaco {
         this.localizacao = localizacao;
     }
 
-    public void setDisponivel(boolean disponivel){
-        this.disponivel = disponivel;
-    }
-
     public int getId(){
         return this.id;
     }
@@ -39,9 +33,5 @@ public abstract class Espaco {
 
     public String getLocalizacao(){
         return this.localizacao;
-    }
-
-    public boolean getDisponivel(){
-        return this.disponivel;
     }
 }
