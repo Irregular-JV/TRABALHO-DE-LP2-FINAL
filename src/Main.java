@@ -1,9 +1,9 @@
 
-import view.TelaLogin;
+import view.TelaPrincipal;
 
 public class Main {
     public static void main(String [] args) {
-        TelaLogin janela = new TelaLogin();
+        TelaPrincipal janela = new TelaPrincipal();
         janela.setVisible(true);
     }
 }
