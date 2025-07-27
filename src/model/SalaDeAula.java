@@ -3,8 +3,8 @@ package model;
 public class SalaDeAula extends Espaco{
     public int quantidadeCarteiras;
 
-    public SalaDeAula(int id, int capacidade, String localizacao, boolean disponivel, int quantidadeCarteiras){
-        super(id, capacidade, localizacao, disponivel);
+    public SalaDeAula(int id, int capacidade, String localizacao, int quantidadeCarteiras){
+        super(id, capacidade, localizacao);
         this.setQuantidadeCarteiras(quantidadeCarteiras);
     }
 

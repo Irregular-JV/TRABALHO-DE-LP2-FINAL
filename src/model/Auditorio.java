@@ -3,8 +3,8 @@ package model;
 public class Auditorio extends Espaco {
     public boolean possuiPalco;
 
-    public Auditorio(int id, int capacidade, String localizacao, boolean disponivel, boolean possuiPalco){
-        super(id, capacidade, localizacao, disponivel);
+    public Auditorio(int id, int capacidade, String localizacao, boolean possuiPalco){
+        super(id, capacidade, localizacao);
         this.setPossuiPalco(possuiPalco);
     }
 

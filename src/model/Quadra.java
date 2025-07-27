@@ -4,8 +4,8 @@ public class Quadra extends Espaco {
     public String tipoEsporte;
     public String tipoPiso;
 
-    public Quadra(int id, int capacidade, String localizacao, boolean disponivel, String tipoEsporte, String tipoPiso){
-        super(id, capacidade, localizacao, disponivel);
+    public Quadra(int id, int capacidade, String localizacao, String tipoEsporte, String tipoPiso){
+        super(id, capacidade, localizacao);
         this.setTipoEsporte(tipoEsporte);
         this.setTipoPiso(tipoPiso);
     }
