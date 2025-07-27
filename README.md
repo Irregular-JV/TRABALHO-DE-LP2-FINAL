@@ -6,39 +6,39 @@
 
 ## 📄 Sobre o Projeto
 
-[cite_start]Este projeto é um **Sistema de Gestão de Espaços Acadêmicos** [cite: 2] [cite_start]desenvolvido como trabalho final para a disciplina de Linguagem de Programação II (LP2)[cite: 1].
+Este projeto é um **Sistema de Gestão de Espaços Acadêmicos** desenvolvido como trabalho final para a disciplina de Linguagem de Programação II (LP2).
 
-[cite_start]O objetivo é aplicar conceitos de programação orientada a objetos, persistência de dados com banco de dados relacional, criação de interfaces gráficas e controle de acesso de usuários para criar um sistema completo e funcional[cite: 4]. [cite_start]A aplicação permite o gerenciamento e a reserva de diversos espaços dentro de uma instituição de ensino, como salas de aula, laboratórios e auditórios[cite: 4, 7].
+O objetivo é aplicar conceitos de programação orientada a objetos, persistência de dados com banco de dados relacional, criação de interfaces gráficas e controle de acesso de usuários para criar um sistema completo e funcional[cite: 4]. [cite_start]A aplicação permite o gerenciamento e a reserva de diversos espaços dentro de uma instituição de ensino, como salas de aula, laboratórios e auditórios.
 
 ## ✨ Funcionalidades Principais
 
 * **Gestão de Espaços:**
-    * [cite_start]Cadastro de múltiplos tipos de espaços: salas de aula, laboratórios, salas de reunião, quadras/campos esportivos e auditórios[cite: 7].
-    * [cite_start]Cada tipo de espaço possui características comuns e atributos únicos[cite: 7].
-    * [cite_start]CRUD completo para todos os tipos de espaços[cite: 23].
+    * Cadastro de múltiplos tipos de espaços: salas de aula, laboratórios, salas de reunião, quadras/campos esportivos e auditórios.
+    * Cada tipo de espaço possui características comuns e atributos únicos.
+    * CRUD completo para todos os tipos de espaços.
 
 * **Gestão de Usuários:**
-    * [cite_start]Sistema de login com autenticação e níveis de acesso diferenciados[cite: 13].
-    * [cite_start]Gerenciamento de usuários com perfis de **Administrador** e **Usuário Comum**[cite: 8].
+    * Sistema de login com autenticação e níveis de acesso diferenciados.
+    * Gerenciamento de usuários com perfis de **Administrador** e **Usuário Comum**.
 
 * **Sistema de Reservas:**
-    * [cite_start]Permite a reserva de espaços por usuários[cite: 9].
-    * [cite_start]Controla a disponibilidade dos espaços por data e horário, evitando conflitos[cite: 9].
+    * Permite a reserva de espaços por usuários.
+    * Controla a disponibilidade dos espaços por data e horário, evitando conflitos.
 
 * **Relatórios e Exportação:**
-    * [cite_start]Geração de relatórios e estatísticas de uso dos espaços[cite: 10].
-    * [cite_start]Exportação de documentos importantes[cite: 11]:
-        * [cite_start]Comprovante de reserva[cite: 11].
-        * [cite_start]Arquivo CSV com registros de reservas[cite: 11, 12].
-        * [cite_start]Arquivo TXT com log de ações no sistema[cite: 12].
+    * Geração de relatórios e estatísticas de uso dos espaços[cite: 10].
+    * Exportação de documentos importantes:
+        * Comprovante de reserva.
+        * Arquivo CSV com registros de reservas.
+        * Arquivo TXT com log de ações no sistema.
 
 ## 🛠️ Tecnologias Utilizadas
 
 * **Linguagem:** Java (JDK 17+)
-* [cite_start]**Interface Gráfica:** Java Swing [cite: 4]
-* [cite_start]**Banco de Dados:** SQLite (pode ser adaptado para MySQL) [cite: 22]
-* [cite_start]**Arquitetura:** Model-View-Controller (MVC) [cite: 25]
-* [cite_start]**Conceitos:** Programação Orientada a Objetos (POO) [cite: 26]
+* **Interface Gráfica:** Java Swing [cite: 4]
+* **Banco de Dados:** SQLite (pode ser adaptado para MySQL) 
+* **Arquitetura:** Model-View-Controller (MVC) 
+* **Conceitos:** Programação Orientada a Objetos (POO) 
 
 ## ⚙️ Como Executar o Projeto
 
@@ -83,4 +83,4 @@ Este projeto foi desenvolvido com dedicação pela seguinte equipe:
 * **Carlos Eduardo Carvalho Lobato**
 
 ---
-[cite_start]*Projeto apresentado como requisito parcial para aprovação na disciplina de Linguagem de Programação II[cite: 1].*
+[cite_start]*Projeto apresentado como requisito parcial para aprovação na disciplina de Linguagem de Programação II.*
