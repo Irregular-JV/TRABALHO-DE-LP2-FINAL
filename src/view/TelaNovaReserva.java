@@ -11,14 +11,13 @@ public class TelaNovaReserva extends JDialog {
     private int idUsuario;
     private JTextField campoInicio;
     private JTextField campoFim;
-    private PainelReservas painelReservas;
 
     public TelaNovaReserva(JFrame parent, int idUsuario) {
         super(parent, "Nova Reserva", true);
         this.idUsuario = idUsuario;
         setSize(400, 300);
         setLocationRelativeTo(parent);
-        setLayout(new GridLayout(5, 2, 10, 10));
+        setLayout(new GridLayout(4, 2, 10, 10));
 
         add(new JLabel("ID do Espaço:"));
         campoIdEspaco = new JTextField();
