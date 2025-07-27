@@ -1,15 +1,20 @@
 package view;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class TelaPrincipal extends JFrame{
@@ -18,6 +23,7 @@ public class TelaPrincipal extends JFrame{
     private JPanel menuLateral;
     private JPanel painelPrincipal;
     private JButton botaoAtivo;
+    private Map<String, JPanel> painelRegistradores = new HashMap<>();
 
 
     public TelaPrincipal() {
@@ -25,6 +31,8 @@ public class TelaPrincipal extends JFrame{
         configurarJanela();
         configurarPaineis();
         montarLayout();
+        configNavBar();
+        registrarPaineis();
         this.setVisible(true);
 
     }
@@ -49,8 +57,9 @@ public class TelaPrincipal extends JFrame{
 
         menuLateral = new JPanel();
         menuLateral.setLayout(new BoxLayout(menuLateral, BoxLayout.Y_AXIS));
-        painelPrincipal = new JPanel();
-
+        painelPrincipal = new JPanel(new CardLayout());
+        painelPrincipal.setBackground(Color.WHITE);
+        
         String[] nomes = { "Home", "Gerenciar Espaços", "Reservas", "Usuários", "Relatórios", "Logs", "Sair"};
 
         Color corFundo = new Color(247, 249, 252); // mesma do menu
@@ -72,15 +81,28 @@ public class TelaPrincipal extends JFrame{
 
             // Evento de clique: marcar como ativo
             btn.addActionListener(_ -> {
+
+                if(nome.equals("Sair")) {
+                    this.dispose(); //Fecha a tela principal
+                    new TelaLogin().setVisible(true);
+                    return;
+                }
+
                 if (botaoAtivo != null) {
                     botaoAtivo.setBackground(corFundo);
                 }
                 btn.setBackground(new Color(210, 225, 255)); // cor de seleção
                 botaoAtivo = btn;
+
+               if(painelRegistradores.containsKey(nome)) {
+                    CardLayout c1 = (CardLayout) painelPrincipal.getLayout();
+                    c1.show(painelPrincipal, nome);
+               }
             });
 
-            menuLateral.add(btn);
-            menuLateral.add(Box.createVerticalStrut(10));
+                menuLateral.add(btn);
+                menuLateral.add(Box.createVerticalStrut(10));
+
         }
 
 
@@ -114,6 +136,49 @@ public class TelaPrincipal extends JFrame{
         btn.setFont(new Font("SansSerif", Font.PLAIN, 14));
         btn.setIconTextGap(10);
         return btn;
+    }
+
+    public void configNavBar() {
+        JPanel painelEsquerdo = new JPanel();
+        painelEsquerdo.setOpaque(false);
+        painelEsquerdo.setLayout(new BoxLayout(painelEsquerdo, BoxLayout.X_AXIS));
+
+        JPanel painelDireito = new JPanel();
+        painelDireito.setOpaque(false);
+        painelDireito.setLayout(new BoxLayout(painelDireito, BoxLayout.X_AXIS));
+
+        JLabel titulo = new JLabel("Sistema de Gestão de Espaços");
+        titulo.setForeground(Color.WHITE);
+        titulo.setFont(new Font("SansSerif", Font.BOLD, 16));
+
+        JLabel usuario = new JLabel("Usuário");
+        usuario.setForeground(Color.WHITE);
+        usuario.setFont(new Font("SansSerif", Font.BOLD, 16));
+
+        painelEsquerdo.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
+        painelDireito.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
+
+        painelEsquerdo.add(titulo);
+        painelDireito.add(usuario);
+
+        navBar.add(painelEsquerdo, BorderLayout.WEST);
+        navBar.add(painelDireito, BorderLayout.EAST);
+
+    }
+
+    public void registrarPaineis() {
+        painelRegistradores.put("Home", new PainelHome());
+        painelRegistradores.put("Gerenciar Espaços", new PainelGerenciarEspacos());
+        painelRegistradores.put("Reservas", new PainelReservas());
+        painelRegistradores.put("Usuários", new PainelUsuarios());
+        painelRegistradores.put("Relatórios", new PainelRelatorios());
+        painelRegistradores.put("Logs", new PainelLogs());
+
+        for(Map.Entry<String, JPanel> entry: painelRegistradores.entrySet()) {
+            painelPrincipal.add(entry.getValue(), entry.getKey());
+        }
+        CardLayout layout = (CardLayout) painelPrincipal.getLayout();
+        layout.show(painelPrincipal, "Home"); // mostra o painel Home ao iniciar
     }
 
 
