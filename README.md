@@ -8,7 +8,7 @@
 
 Este projeto é um **Sistema de Gestão de Espaços Acadêmicos** desenvolvido como trabalho final para a disciplina de Linguagem de Programação II (LP2).
 
-O objetivo é aplicar conceitos de programação orientada a objetos, persistência de dados com banco de dados relacional, criação de interfaces gráficas e controle de acesso de usuários para criar um sistema completo e funcional[cite: 4]. [cite_start]A aplicação permite o gerenciamento e a reserva de diversos espaços dentro de uma instituição de ensino, como salas de aula, laboratórios e auditórios.
+O objetivo é aplicar conceitos de programação orientada a objetos, persistência de dados com banco de dados relacional, criação de interfaces gráficas e controle de acesso de usuários para criar um sistema completo e funcional. A aplicação permite o gerenciamento e a reserva de diversos espaços dentro de uma instituição de ensino, como salas de aula, laboratórios e auditórios.
 
 ## ✨ Funcionalidades Principais
 
@@ -26,7 +26,7 @@ O objetivo é aplicar conceitos de programação orientada a objetos, persistên
     * Controla a disponibilidade dos espaços por data e horário, evitando conflitos.
 
 * **Relatórios e Exportação:**
-    * Geração de relatórios e estatísticas de uso dos espaços[cite: 10].
+    * Geração de relatórios e estatísticas de uso dos espaços.
     * Exportação de documentos importantes:
         * Comprovante de reserva.
         * Arquivo CSV com registros de reservas.
@@ -35,7 +35,7 @@ O objetivo é aplicar conceitos de programação orientada a objetos, persistên
 ## 🛠️ Tecnologias Utilizadas
 
 * **Linguagem:** Java (JDK 17+)
-* **Interface Gráfica:** Java Swing [cite: 4]
+* **Interface Gráfica:** Java Swing 
 * **Banco de Dados:** SQLite (pode ser adaptado para MySQL) 
 * **Arquitetura:** Model-View-Controller (MVC) 
 * **Conceitos:** Programação Orientada a Objetos (POO) 
@@ -83,4 +83,4 @@ Este projeto foi desenvolvido com dedicação pela seguinte equipe:
 * **Carlos Eduardo Carvalho Lobato**
 
 ---
-[cite_start]*Projeto apresentado como requisito parcial para aprovação na disciplina de Linguagem de Programação II.*
+*Projeto apresentado como requisito parcial para aprovação na disciplina de Linguagem de Programação II.*
