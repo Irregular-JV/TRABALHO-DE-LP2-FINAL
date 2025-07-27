@@ -6,10 +6,12 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import java.awt.Component;
+import java.awt.event.ActionListener;
 
 
 import java.awt.BorderLayout;
@@ -20,6 +22,10 @@ import java.awt.Font;
 public class TelaLogin extends JFrame {
     private JPanel topoAzul;
     private JPanel painelCentral;
+    JTextField campoUsuario = new JTextField();
+    JButton botaoCadastro = new JButton("Cadastro");
+    JButton botaoEntrar = new JButton("Entrar");
+    JPasswordField campoSenha = new JPasswordField();
 
     public TelaLogin() {
         super("Login");
@@ -30,8 +36,9 @@ public class TelaLogin extends JFrame {
     
 
     public void configurarTelaLogin() {
-        this.setSize(400, 330);
+        this.setSize(400, 400);
         this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     public void configuraPainel() {
@@ -65,7 +72,6 @@ public class TelaLogin extends JFrame {
 
 
         //Campo usuario
-        JTextField campoUsuario = new JTextField();
         campoUsuario.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         campoUsuario.setBorder((BorderFactory.createTitledBorder("Usuário")));
 
@@ -76,7 +82,6 @@ public class TelaLogin extends JFrame {
 
 
         //Campo senha
-        JPasswordField campoSenha = new JPasswordField();
         campoSenha.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         campoSenha.setBorder(BorderFactory.createTitledBorder("Senha"));
 
@@ -87,7 +92,6 @@ public class TelaLogin extends JFrame {
 
 
         //Botão de entrar
-        JButton botaoEntrar = new JButton("Entrar");
         botaoEntrar.setAlignmentX(Component.CENTER_ALIGNMENT);
         botaoEntrar.setBackground(new Color(45, 65, 95));
         botaoEntrar.setForeground(Color.WHITE);
@@ -97,6 +101,18 @@ public class TelaLogin extends JFrame {
         botaoEntrar.setBorder(
             BorderFactory.createEmptyBorder(12, 12, 12, 12) // padding: top, left, bottom, right
         );
+
+        //Botão de cadastro
+        botaoCadastro.setAlignmentX(Component.CENTER_ALIGNMENT);
+        botaoCadastro.setBackground(new Color(45, 65, 95));
+        botaoCadastro.setForeground(Color.WHITE);
+        botaoCadastro.setFocusPainted(false);
+
+        botaoCadastro.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        botaoCadastro.setBorder(
+            BorderFactory.createEmptyBorder(12, 12, 12, 12) // padding: top, left, bottom, right
+        );
+        
         
 
         //Adicionando os componentes
@@ -107,6 +123,36 @@ public class TelaLogin extends JFrame {
         painelCentral.add(Box.createVerticalStrut(20));
 
         painelCentral.add(botaoEntrar);
-        
+        painelCentral.add(Box.createVerticalStrut(10));
+
+        painelCentral.add(botaoCadastro);
+    }
+
+    public void addLoginListener(ActionListener listener) {
+    this.botaoEntrar.addActionListener(listener);
+    }
+
+    public void addCadastroListener(ActionListener listener) {
+    this.botaoCadastro.addActionListener(listener);
+    }
+
+    public JButton getBotaoEntrar(){
+        return this.botaoEntrar;
+    }
+
+    public JButton getBotaoCadastrar(){
+        return this.botaoCadastro;
+    }
+
+    public String getUsername(){
+        return this.campoUsuario.getText();
+    }
+
+    public String getSenha(){
+        return new String(this.campoSenha.getPassword());
+    }
+
+    public void mostrarMensagem(String mensagem) {
+        JOptionPane.showMessageDialog(this, mensagem);
     }
 }
