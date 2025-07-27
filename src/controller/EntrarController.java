@@ -45,7 +45,7 @@ public class EntrarController implements ActionListener {
         if (usuarioDoBanco != null && usuarioDoBanco.getSenha().equals(senha)) {
             view.mostrarMensagem("Login bem-sucedido!");
             view.dispose();
-            new TelaPrincipal().setVisible(true);
+            new TelaPrincipal(usuarioDoBanco.getUsername()).setVisible(true);
         } else {
             view.mostrarMensagem("Usuário ou senha inválidos.");
         }
@@ -73,7 +73,7 @@ public class EntrarController implements ActionListener {
             
             Usuario usuarioRecemCriado = model.buscarPorUsername(username);
             view.dispose();
-            new TelaPrincipal().setVisible(true);
+            new TelaPrincipal(usuarioRecemCriado.getUsername()).setVisible(true);
 
         } catch (Exception e) {
             view.mostrarMensagem("Erro durante o cadastro: " + e.getMessage());

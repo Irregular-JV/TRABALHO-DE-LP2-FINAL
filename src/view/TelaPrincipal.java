@@ -7,6 +7,10 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import controller.EntrarController;
+import model.UsuarioDAO;
+
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -17,8 +21,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class TelaPrincipal extends JFrame{
 
+public class TelaPrincipal extends JFrame{
+    private String nomeUsuario;
     private JPanel navBar;
     private JPanel menuLateral;
     private JPanel painelPrincipal;
@@ -26,8 +31,9 @@ public class TelaPrincipal extends JFrame{
     private Map<String, JPanel> painelRegistradores = new HashMap<>();
 
 
-    public TelaPrincipal() {
+    public TelaPrincipal(String nomeUsuario) {
         super("Gestão de Espaços Academicos");
+        this.nomeUsuario = nomeUsuario;
         configurarJanela();
         configurarPaineis();
         montarLayout();
@@ -84,7 +90,9 @@ public class TelaPrincipal extends JFrame{
 
                 if(nome.equals("Sair")) {
                     this.dispose(); //Fecha a tela principal
-                    new TelaLogin().setVisible(true);
+                    TelaLogin novaTelaLogin = new TelaLogin();
+                    new EntrarController(novaTelaLogin, new UsuarioDAO());
+                    novaTelaLogin.setVisible(true);
                     return;
                 }
 
@@ -167,7 +175,7 @@ public class TelaPrincipal extends JFrame{
     }
 
     public void registrarPaineis() {
-        painelRegistradores.put("Home", new PainelHome());
+        painelRegistradores.put("Home", new PainelHome(nomeUsuario));
         painelRegistradores.put("Gerenciar Espaços", new PainelGerenciarEspacos());
         painelRegistradores.put("Reservas", new PainelReservas());
         painelRegistradores.put("Usuários", new PainelUsuarios());

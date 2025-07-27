@@ -4,7 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public class PainelHome extends JPanel {
-    public PainelHome() {
+    private String nome;
+
+    public PainelHome(String nome) {
+        this.nome = nome;
         this.setLayout(new BorderLayout());
         this.setBackground(Color.WHITE);
 
@@ -18,7 +21,7 @@ public class PainelHome extends JPanel {
         painelTopo.setBackground(Color.WHITE);
         painelTopo.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        JLabel saudacao = new JLabel("Bem-vindo, João");
+        JLabel saudacao = new JLabel("Bem-vindo, " + nome);
         saudacao.setFont(new Font("SansSerif", Font.BOLD, 20));
 
         JLabel subtitulo = new JLabel("Aqui você pode reservar salas, gerenciar espaços e muito mais.");
