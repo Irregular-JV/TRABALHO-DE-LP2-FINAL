@@ -128,7 +128,7 @@ public class TelaLogin extends JFrame {
         painelCentral.add(botaoCadastro);
     }
 
-    public void addLoginListener(ActionListener listener) {
+    public void addEntrarListener(ActionListener listener) {
     this.botaoEntrar.addActionListener(listener);
     }
 

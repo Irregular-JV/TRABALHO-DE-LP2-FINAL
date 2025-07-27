@@ -14,7 +14,7 @@ public class EntrarController implements ActionListener {
     public EntrarController(TelaLogin view, UsuarioDAO model) {
         this.view = view;
         this.model = model;
-        this.view.addLoginListener(this);
+        this.view.addEntrarListener(this);
         this.view.addCadastroListener(this); // Supondo que você tenha esse
     }
 
