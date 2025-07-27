@@ -30,6 +30,7 @@ public class TelaPrincipal extends JFrame{
     private JPanel painelPrincipal;
     private JButton botaoAtivo;
     private Map<String, JPanel> painelRegistradores = new HashMap<>();
+    private PainelReservas painelReservas;
 
 
     public TelaPrincipal(String nomeUsuario, int idUsuario) {
@@ -177,9 +178,16 @@ public class TelaPrincipal extends JFrame{
     }
 
     public void registrarPaineis() {
-        painelRegistradores.put("Home", new PainelHome(nomeUsuario, idUsuario));
+        painelReservas = new PainelReservas();
+        PainelHome home = new PainelHome(nomeUsuario, idUsuario, () -> {
+            new TelaNovaReserva(this, idUsuario, () -> painelReservas.atualizarReservas());
+        });
+
+
+
+        painelRegistradores.put("Home", home);
         painelRegistradores.put("Gerenciar Espaços", new PainelGerenciarEspacos());
-        painelRegistradores.put("Reservas", new PainelReservas());
+        painelRegistradores.put("Reservas", painelReservas);
         painelRegistradores.put("Usuários", new PainelUsuarios());
         painelRegistradores.put("Relatórios", new PainelRelatorios());
         painelRegistradores.put("Logs", new PainelLogs());

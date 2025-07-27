@@ -17,10 +17,12 @@ public class TelaNovaReserva extends JDialog {
     private JComboBox<String> comboHoraInicio;
     private JComboBox<String> comboHoraFim;
     private Map<String, Integer> mapaEspacos;
+    private final Runnable onSuccess;
 
-    public TelaNovaReserva(JFrame parent, int idUsuario) {
+    public TelaNovaReserva(JFrame parent, int idUsuario, Runnable onSuccess) {
         super(parent, "Nova Reserva", true);
         this.idUsuario = idUsuario;
+        this.onSuccess = onSuccess;
         setSize(400, 300);
         setLocationRelativeTo(parent);
         setLayout(new GridLayout(6, 2, 10, 10));
@@ -117,6 +119,7 @@ public class TelaNovaReserva extends JDialog {
             if (dao.salvarReserva(reserva)) {
                 JOptionPane.showMessageDialog(this, "Reserva realizada com sucesso!");
                 dispose();
+                onSuccess.run();
             } else {
                 JOptionPane.showMessageDialog(this, "Horário indisponível.");
             }

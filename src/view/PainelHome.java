@@ -6,10 +6,13 @@ import java.awt.*;
 public class PainelHome extends JPanel {
     private String nome;
     private int idUsuario;
+    private final Runnable onNovaReserva;
 
-    public PainelHome(String nome, int idUsuario) {
+    public PainelHome(String nome, int idUsuario, Runnable onNovaReserva) {
         this.nome = nome;
         this.idUsuario = idUsuario;
+
+        this.onNovaReserva = onNovaReserva;
         this.setLayout(new BorderLayout());
         this.setBackground(Color.WHITE);
 
@@ -134,8 +137,9 @@ public class PainelHome extends JPanel {
 
         btn.addActionListener(e -> {
             if (nome.equals("Nova Reserva")) {
-                JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
-                new TelaNovaReserva(parent, idUsuario);
+                //JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
+                //new TelaNovaReserva(parent, idUsuario);
+                onNovaReserva.run();
             }
         });
         return btn;
