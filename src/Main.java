@@ -1,10 +1,20 @@
 
-import view.TelaPrincipal;
+import view.TelaLogin;
+import model.UsuarioDAO;
+import controller.EntrarController;
+import javax.swing.SwingUtilities; // Import para boa prática de Swing
 
 public class Main {
-    public static void main(String [] args) {
-        TelaPrincipal janela = new TelaPrincipal();
-        janela.setVisible(true);
+    public static void main(String[] args) {
+        // Garante que a interface gráfica seja criada na thread correta do Swing
+        SwingUtilities.invokeLater(() -> {
+            UsuarioDAO usuarioDAO = new UsuarioDAO();
+
+            TelaLogin loginView = new TelaLogin();
+
+            EntrarController loginController = new EntrarController(loginView, usuarioDAO);
+
+            loginView.setVisible(true);
+        });
     }
 }
-
