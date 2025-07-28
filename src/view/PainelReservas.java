@@ -11,6 +11,7 @@ import model.Usuario;
 import model.UsuarioDAO;
 
 import java.awt.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class PainelReservas extends JPanel {
@@ -102,13 +103,13 @@ public class PainelReservas extends JPanel {
         lblUsuario.setForeground(Color.DARK_GRAY);
         lblUsuario.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Processa datas
-        String[] inicioParts = reserva.getInicio().split("-");
-        String[] fimParts = reserva.getFim().split("-");
+        // Usando os métodos do LocalDateTime para montar a data e hora
+        LocalDateTime inicio = reserva.getInicio();
+        LocalDateTime fim = reserva.getFim();
 
-        String data = inicioParts[1] + "/" + inicioParts[0]; // dd/MM
-        String horaInicio = inicioParts[2] + ":00";
-        String horaFim = fimParts[2] + ":00";
+        String data = String.format("%02d/%02d", inicio.getDayOfMonth(), inicio.getMonthValue());
+        String horaInicio = String.format("%02d:%02d", inicio.getHour(), inicio.getMinute());
+        String horaFim = String.format("%02d:%02d", fim.getHour(), fim.getMinute());
 
         JLabel lblHorario = new JLabel("Reserva dia " + data + " das " + horaInicio + " até " + horaFim);
         lblHorario.setFont(new Font("SansSerif", Font.PLAIN, 14));
@@ -124,6 +125,6 @@ public class PainelReservas extends JPanel {
         card.add(lblHorario);
 
         return card;
-    }   
+    }
 
 }
