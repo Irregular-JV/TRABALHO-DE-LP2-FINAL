@@ -131,17 +131,17 @@ public class PainelGerenciarEspacos extends JPanel  {
     }
 
         public JButton btnTabel(String nome) {
-        JButton btn = new JButton(nome);
-        btn.setFont(new Font("SansSerif", Font.BOLD, 16));
-        btn.setForeground(Color.black);
-        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btn.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(147, 220, 225), 1, true),
-            BorderFactory.createEmptyBorder(7, 20, 7, 20)
-        ));
-        btn.setFocusPainted(false);
-        btn.setBackground(Color.WHITE);
-        return btn;
-    }
+            JButton btn = new JButton(nome);
+            btn.setFont(new Font("SansSerif", Font.BOLD, 16));
+            btn.setForeground(Color.black);
+            btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            btn.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(147, 220, 225), 1, true),
+                BorderFactory.createEmptyBorder(7, 20, 7, 20)
+            ));
+            btn.setFocusPainted(false);
+            btn.setBackground(Color.WHITE);
+            return btn;
+        }
     
 }
