@@ -2,6 +2,7 @@
 import view.TelaLogin;
 import model.*;
 import controller.EntrarController;
+
 import javax.swing.SwingUtilities; // Import para boa prática de Swing
 
 public class Main {

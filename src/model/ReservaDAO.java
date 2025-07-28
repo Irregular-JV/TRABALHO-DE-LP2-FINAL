@@ -1,9 +1,10 @@
 package model;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import controller.RelatorioController;
 
 public class ReservaDAO {
     private Connection connection;
@@ -23,7 +24,13 @@ public class ReservaDAO {
             stmt.setString(3, inicio);
 
             ResultSet rs = stmt.executeQuery();
-            return !rs.next(); // Se não houver conflito, está disponível
+            boolean disponivel  = !rs.next();
+            RelatorioController.registrarLog(
+                disponivel
+                ? "Verificação de disponibilidade: espaço " + idEspaco + " disponível em " + inicio + "–" + fim
+                : "Verificação de disponibilidade: espaço " + idEspaco + " **não** disponível em " + inicio + "–" + fim
+            );
+            return disponivel; // Se não houver conflito, está disponível
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -45,10 +52,16 @@ public class ReservaDAO {
             stmt.setString(3, reserva.getInicio());
             stmt.setString(4, reserva.getFim());
             stmt.executeUpdate();
+            RelatorioController.registrarLog(
+                "Reserva criada: usuário " + reserva.getIdUsuario() +
+                " no espaço " + reserva.getIdEspaco() +
+                " de " + reserva.getInicio() +
+                " até " + reserva.getFim()
+            );
             return true;
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            RelatorioController.registrarLog("Erro ao salvar reserva: " + e.getMessage());
             return false;
         }
     }
@@ -71,6 +84,7 @@ public class ReservaDAO {
                 );
                 r.setId(rs.getInt("id"));
                 reservas.add(r);
+                RelatorioController.registrarLog("Listagem de reservas solicitada");
             }
 
         } catch (SQLException e) {
