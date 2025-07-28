@@ -14,8 +14,14 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 public class PainelGerenciarEspacos extends JPanel  {
+    private JTable tabela;
+    private DefaultTableModel modeloTabela;
+    private controller.EspacoController controller = new controller.EspacoController();
+    private JLabel labelInfo;
+
     public PainelGerenciarEspacos() {
       this.setLayout(new BorderLayout());
       this.setBackground(Color.WHITE);
@@ -72,12 +78,10 @@ public class PainelGerenciarEspacos extends JPanel  {
     public void ConfigurarTabela() {
         //Modelo para visualização
         String[] colunas = {"Nome", "Tipo", "Capacidade"};
-        Object[][] dados = {
-            {"Sala 101", "Laboratório", 30},
-            {"Auditório", "Auditório", 100}
-        };
+        modeloTabela = new DefaultTableModel(new String[] {"Nome", "Tipo", "Capacidade"}, 0);
+        tabela = new JTable(modeloTabela);
 
-        JTable tabela = new JTable(dados, colunas);
+
         JScrollPane scrol = new JScrollPane(tabela);
 
         JPanel tabelaEspaco = new JPanel();
@@ -113,7 +117,7 @@ public class PainelGerenciarEspacos extends JPanel  {
 
         JButton btnNovoEspaco = btnTabel("Novo Espaco");
 
-        btnNovoEspaco.addActionListener(_ -> abrirDialogNovoEspaco());
+        btnNovoEspaco.addActionListener(e -> abrirDialogNovoEspaco());
 
         painelBotoes.add(btnNovoEspaco);
         painelBotoes.add(btnTabel("Editar Espaço"));
@@ -123,6 +127,16 @@ public class PainelGerenciarEspacos extends JPanel  {
         tabelaEspaco.add(painelBotoes); // adiciona os botões ao painel
 
         this.add(tabelaEspaco, BorderLayout.CENTER);
+
+        java.util.List<model.Espaco> espacos = controller.listarTodos();
+        for (model.Espaco esp : espacos) {
+            modeloTabela.addRow(new Object[] {
+                esp.getLocalizacao(),
+                esp.getClass().getSimpleName(),
+                esp.getCapacidade()
+            });
+}
+
     }
 
     public void configurarRodape() {
@@ -130,7 +144,7 @@ public class PainelGerenciarEspacos extends JPanel  {
         rodape.setBackground(Color.WHITE);
         rodape.setBorder((BorderFactory.createEmptyBorder(10, 20, 10, 20)));
 
-        JLabel labelInfo = new JLabel("2 espaços encontrados");
+        labelInfo = new JLabel(modeloTabela.getRowCount() + " espaços encontrados");
         rodape.add(labelInfo);
 
         this.add(rodape, BorderLayout.SOUTH);
@@ -150,14 +164,47 @@ public class PainelGerenciarEspacos extends JPanel  {
         return btn;
     }
 
-    private void abrirDialogNovoEspaco() {
-        JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this); // recupera a janela pai
+    public void abrirDialogNovoEspaco() {
+        JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
         DialogNovoEspaco dialog = new DialogNovoEspaco(parentFrame);
         dialog.setVisible(true);
 
-        // Logica para atualizar a tabela vem aqui em baixo
+        try {
+            model.Espaco espaco = dialog.getEspacoCriado(); // vai lançar exceção se usuário cancelar ou errar
 
+           controller.salvar(espaco);// salva no SQLite
+           recarregarTabela(); // recarrega a tabela toda
+
+            modeloTabela.addRow(new Object[] {
+                espaco.getLocalizacao(),
+                espaco.getClass().getSimpleName(),
+                espaco.getCapacidade()
+            });
+
+        } catch (Exception e) {
+            // Sem problema — o usuário pode ter cancelado
+            System.out.println("Criação de espaço cancelada ou inválida.");
+        }
     }
+
+    public void recarregarTabela() {
+        modeloTabela.setRowCount(0); // limpa a tabela
+
+        java.util.List<model.Espaco> espacos = controller.listarTodos();
+        for (model.Espaco esp : espacos) {
+            modeloTabela.addRow(new Object[] {
+                esp.getLocalizacao(),
+                esp.getClass().getSimpleName(),
+                esp.getCapacidade()
+            });
+        }
+
+        if (labelInfo != null) {
+            labelInfo.setText(modeloTabela.getRowCount() + " espaços encontrados");
+        }
+    }
+
+
 
 
     
