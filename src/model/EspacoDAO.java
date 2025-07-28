@@ -7,6 +7,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.management.relation.Relation;
+
+import controller.RelatorioController;
+
 
 public class EspacoDAO {
     
@@ -63,10 +67,14 @@ public class EspacoDAO {
             }
 
             stmt.executeUpdate();
-            System.out.println("Espaco salvo com sucesso!");
+            String msg = espaco.getClass().getSimpleName() + " salvo com sucesso!";
+            RelatorioController.registrarLog(msg);
+            System.out.println(msg);
 
         } catch (SQLException e){
-            throw new RuntimeException("Erro ao salvar espaco: " + e.getMessage());
+            String msg = "Erro ao salvar espaco: " + e.getMessage();
+            RelatorioController.registrarLog(msg);
+            throw new RuntimeException(msg);
         }
     }   
 
@@ -77,9 +85,13 @@ public class EspacoDAO {
             stmt.setInt(1, id);
 
             stmt.executeUpdate();
-            System.out.println("Espaco deletado com sucesso!");
+            String msg = "Espaco de id " + id + " deletado com sucesso!";
+            RelatorioController.registrarLog(msg);
+            System.out.println(msg);
         } catch (SQLException e){
-            throw new RuntimeException("Erro ao deletar espaco: " + e.getMessage());
+            String msg = "Erro ao deletar espaco: " + e.getMessage();
+            RelatorioController.registrarLog(msg);
+            throw new RuntimeException(msg);
         }
     }
 
@@ -141,10 +153,14 @@ public class EspacoDAO {
             stmt.setInt(11, espaco.getId());
 
             stmt.executeUpdate();
-            System.out.println("Espaco atualizado com sucesso!");
+            String msg = espaco.getClass().getSimpleName() + " atualizado com sucesso!";
+            RelatorioController.registrarLog(msg);
+            System.out.println(msg);
 
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao atualizar espaco: " + e.getMessage());
+            String msg = "Erro ao atualizar espaco: " + e.getMessage();
+            RelatorioController.registrarLog(msg);
+            throw new RuntimeException(msg);
         }
     }
 
@@ -187,9 +203,12 @@ public class EspacoDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao listar espaços: " + e.getMessage());
+            String msg = "Erro ao listar espaços: " + e.getMessage();
+            RelatorioController.registrarLog(msg);
+            throw new RuntimeException(msg);
         }
 
+        RelatorioController.registrarLog("Listagem de espacos criada com sucesso!");
         return espacos;
     }
 
@@ -233,13 +252,20 @@ public class EspacoDAO {
                 }
             }
         } catch (SQLException e){
-            throw new RuntimeException("Erro ao encontrar espaco pelo id: " + e.getMessage());
+            String msg = "Erro ao encontrar espaco pelo id: " + e.getMessage();
+            RelatorioController.registrarLog(msg);
+            throw new RuntimeException(msg);
         }
 
-        if (espaco != null)
-            System.out.println("Espaco encontrado com sucesso!");
-        else
-            System.out.println("Espaco não encontrado.");
+        if (espaco != null){
+            String msg_espaco = "Espaco de id " + id + " encontrado com sucesso!";
+            RelatorioController.registrarLog(msg_espaco);
+            System.out.println(msg_espaco);
+        } else {
+            String msg_espaco = "Espaco não encontrado.";
+            RelatorioController.registrarLog(msg_espaco); 
+            System.out.println(msg_espaco);
+        }
 
         return espaco;
     }
@@ -285,9 +311,13 @@ public class EspacoDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao buscar por tipo: " + e.getMessage());
+            String msg = "Erro ao buscar por tipo: " + e.getMessage();
+            RelatorioController.registrarLog(msg);
+            throw new RuntimeException(msg);
         }
 
+        String msg = "Listagem de tipo " + tipoDesejado + " realizada com sucesso.";
+        RelatorioController.registrarLog(msg);
         return espacos;
     }
 
@@ -332,9 +362,13 @@ public class EspacoDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao buscar por localizacao: " + e.getMessage());
+            String msg = "Erro ao buscar por localizacao: " + e.getMessage();
+            RelatorioController.registrarLog(msg);
+            throw new RuntimeException(msg);
         }
 
+        String msg = "Espacos com localizacao " + termo + " listados com sucesso.";
+        RelatorioController.registrarLog(msg);
         return espacos;
     }
 

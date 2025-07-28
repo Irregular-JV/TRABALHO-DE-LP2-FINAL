@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import controller.RelatorioController;
+
 public class UsuarioDAO {
 
     private Connection connection;
@@ -28,24 +30,48 @@ public class UsuarioDAO {
             stmt.setString(3, usuario.getNivelAcesso());
 
             stmt.executeUpdate();
-            System.out.println("Usuario salvo com sucesso!");
+            String msg = "Usuario salvo com sucesso!";
+            RelatorioController.registrarLog(msg);
+            System.out.println(msg);
         } catch (SQLException e){
-            throw new RuntimeException("Erro ao salvar dados do usuário" + e.getMessage());
+            String msg = "Erro ao salvar dados do usuário" + e.getMessage();
+            RelatorioController.registrarLog(msg);
+            throw new RuntimeException(msg);
         }
     }
 
     // Deletar usuário do banco de dados
 
     public void deletar(int id){
-        String sql = "DELETE FROM Usuario WHERE id = ?";
+        String username = "(desconhecido)"; // valor padrão, caso algo dê errado
 
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, id);
+        try {
+            // Primeiro: recuperar username
+            String sqlSelect = "SELECT username FROM Usuario WHERE id = ?";
+            try (PreparedStatement stmt = connection.prepareStatement(sqlSelect)) {
+                stmt.setInt(1, id);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        username = rs.getString("username");
+                    }
+                }
+            }
 
-            stmt.executeUpdate();
-            System.out.println("Usuario deletado com sucesso!");
+            // Segundo: deletar usuário
+            String sqlDelete = "DELETE FROM Usuario WHERE id = ?";
+            try (PreparedStatement stmt = connection.prepareStatement(sqlDelete)) {
+                stmt.setInt(1, id);
+                stmt.executeUpdate();
+            }
+
+            String msg_delete = "Usuario " + username + " deletado com sucesso!";
+            RelatorioController.registrarLog(msg_delete);
+            System.out.println(msg_delete);
+
         } catch (SQLException e){
-            throw new RuntimeException("Erro ao deletar usuário" + e.getMessage());
+            String msg_delete = "Erro ao deletar usuário: " + e.getMessage();
+            RelatorioController.registrarLog(msg_delete);
+            throw new RuntimeException(msg_delete);
         }
     }
 
@@ -68,9 +94,14 @@ public class UsuarioDAO {
                 usuarios.add(usuario);
             }
         } catch (SQLException e){
-            throw new RuntimeException("Erro ao listar usuários" + e.getMessage());
+            String msg_listagem = "Erro ao listar usuários" + e.getMessage();
+            RelatorioController.registrarLog(msg_listagem);
+            throw new RuntimeException(msg_listagem);
         }
-        System.out.println("Listagem feita com sucesso!");
+
+        String msg_listagem = "Listagem de usuarios feita com sucesso!";
+        RelatorioController.registrarLog(msg_listagem); 
+        System.out.println(msg_listagem);
         return usuarios;
     }
     
@@ -95,9 +126,13 @@ public class UsuarioDAO {
         }
 
         } catch (SQLException e){
-            throw new RuntimeException("Erro ao encontrar usuario pelo username: " + e.getMessage());
+            String msg_busca = "Erro ao encontrar usuario pelo username: " + e.getMessage();
+            RelatorioController.registrarLog(msg_busca);
+            throw new RuntimeException(msg_busca);
         }
-        System.out.println("Usuário encontrado com sucesso!");
+        String msg_busca = "Usuário encontrado com sucesso!";
+        RelatorioController.registrarLog(msg_busca);
+        System.out.println(msg_busca);
         return usuario;
     }
 
@@ -120,9 +155,13 @@ public class UsuarioDAO {
         }
 
         } catch (SQLException e){
-            throw new RuntimeException("Erro ao encontrar usuario pelo id: " + e.getMessage());
+            String msg_busca = "Erro ao encontrar usuario pelo id: " + e.getMessage();
+            RelatorioController.registrarLog(msg_busca);
+            throw new RuntimeException(msg_busca);
         }
-        System.out.println("Usuário encontrado com sucesso!");
+        String msg_busca = "Usuário encontrado com sucesso!";
+        RelatorioController.registrarLog(msg_busca);
+        System.out.println(msg_busca);
         return usuario;
     }
 
@@ -138,9 +177,13 @@ public class UsuarioDAO {
             stmt.setInt(2, id);
 
             stmt.executeUpdate();
-            System.out.println("Senha do usuário atualizada com sucesso!");
+            String msg_update = "Senha do usuário de id " + id + " atualizada com sucesso!";
+            RelatorioController.registrarLog(msg_update);
+            System.out.println(msg_update);
         } catch (SQLException e){
-            throw new RuntimeException("Erro ao atualizar senha do usuário: " + e.getMessage());
+            String msg_update = "Erro ao atualizar senha do usuário: " + e.getMessage();
+            RelatorioController.registrarLog(msg_update);
+            throw new RuntimeException(msg_update);
         }
     }
 
@@ -154,9 +197,13 @@ public class UsuarioDAO {
             stmt.setInt(2, id);
 
             stmt.executeUpdate();
-            System.out.println("Username do usuário atualizada com sucesso!");
+            String msg_update = "Username do usuário de id " + id + " atualizada com sucesso!";
+            RelatorioController.registrarLog(msg_update);
+            System.out.println(msg_update);
         } catch (SQLException e){
-            throw new RuntimeException("Erro ao atualizar username do usuário: " + e.getMessage());
+            String msg_update = "Erro ao atualizar username do usuário: " + e.getMessage();
+            RelatorioController.registrarLog(msg_update);
+            throw new RuntimeException(msg_update);
         }
     }
 
@@ -170,9 +217,13 @@ public class UsuarioDAO {
             stmt.setInt(2, id);
 
             stmt.executeUpdate();
-            System.out.println("Nivel de acesso do usuário atualizado com sucesso!");
+            String msg_update = "Nivel de acesso do usuário de id " + id + " atualizado com sucesso!";
+            RelatorioController.registrarLog(msg_update);
+            System.out.println(msg_update);
         } catch (SQLException e){
-            throw new RuntimeException("Erro ao atualizar o nivel de acesso do usuário: " + e.getMessage());
+            String msg_update = "Erro ao atualizar o nivel de acesso do usuário: " + e.getMessage();
+            RelatorioController.registrarLog(msg_update);
+            throw new RuntimeException(msg_update);
         }
     }
 }
