@@ -29,6 +29,7 @@ public class ConnectionFactory {
     private void inicializarBanco(Connection conn){
         criarTabelaUsuario(conn);
         criarTabelaEspaco(conn);
+        criarTabelaReserva(conn);
     }
 
     private void criarTabelaUsuario(Connection conn){
@@ -61,7 +62,7 @@ public class ConnectionFactory {
         }
     }
 
-        private void criarTabelaEspaco(Connection conn) {
+    private void criarTabelaEspaco(Connection conn) {
         String sql = """
             CREATE TABLE IF NOT EXISTS Espaco (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -93,6 +94,27 @@ public class ConnectionFactory {
             System.out.println("Tabela 'Espaco' verificada/criada.");
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao criar tabela Espaco: " + e.getMessage());
+        }
+    }
+
+    private void criarTabelaReserva(Connection conn) {
+        String sql = """
+            CREATE TABLE IF NOT EXISTS reservas (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                id_espaco INTEGER NOT NULL,
+                id_usuario INTEGER NOT NULL,
+                inicio TEXT NOT NULL,
+                fim TEXT NOT NULL,
+                FOREIGN KEY (id_espaco) REFERENCES Espaco(id),
+                FOREIGN KEY (id_usuario) REFERENCES Usuario(id)
+            );
+        """;
+
+        try (Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("Tabela 'reservas' verificada/criada.");
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao criar tabela de reservas: " + e.getMessage());
         }
     }
 }

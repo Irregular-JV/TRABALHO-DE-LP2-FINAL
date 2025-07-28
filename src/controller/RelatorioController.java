@@ -1,0 +1,68 @@
+package controller;
+
+import model.Reserva;
+import model.ReservaDAO;
+import model.UsuarioDAO;
+import model.Espaco;
+import java.io.*;
+import java.util.List;
+import java.time.LocalDateTime;
+
+public class RelatorioController {
+    private ReservaDAO reservaDAO;
+    private UsuarioDAO usuarioDAO;
+
+    public RelatorioController(){
+        this.reservaDAO = new ReservaDAO();
+        this.usuarioDAO = new UsuarioDAO();
+    }
+
+    public static void registrarLog(String mensagem){
+        File dir = new File("docs");
+        if(!dir.exists()) dir.mkdirs();
+        try(FileWriter writer = new FileWriter("docs/log.txt", true)){
+            String timestamp = LocalDateTime.now().toString();
+            writer.write("[" + timestamp + "]" + mensagem + "\n");
+        } catch (IOException e){
+            System.err.println("Erro ao registrar log: " + e.getMessage());
+        }
+    }
+
+    // Gerar comprovante txt da Reserva
+    public String gerarComprovanteReserva(Reserva reserva) {
+        String nomeArquivo = "docs/comprovante_reserva_" + reserva.getId() + ".txt";
+
+        try (PrintWriter writer = new PrintWriter(nomeArquivo)) {
+            writer.println("=== Comprovante de Reserva ===");
+            writer.println("ID da Reserva: " + reserva.getId());
+            writer.println("Espaço ID: " + reserva.getIdEspaco());
+            writer.println("Usuário ID: " + reserva.getIdUsuario());
+            writer.println("Início: " + reserva.getInicio());
+            writer.println("Fim: " + reserva.getFim());
+            return "Comprovante gerado: " + nomeArquivo;
+        } catch (IOException e) {
+            return "Erro ao gerar comprovante: " + e.getMessage();
+        }
+    }
+
+    // Exportar reservas para CSV
+    public String exportarReservasCSV(String nomeArquivo) {
+        List<Reserva> reservas = reservaDAO.listar();
+
+        String caminho = "docs/" + nomeArquivo;
+
+        try (PrintWriter writer = new PrintWriter(caminho)) {
+            writer.println("ID,EspacoID,UsuarioID,Inicio,Fim");
+            for (Reserva r : reservas) {
+                writer.printf("%d,%d,%d,%s,%s%n", r.getId(), r.getIdEspaco(), r.getIdUsuario(), r.getInicio(), r.getFim());
+            }
+            return "Arquivo CSV gerado com sucesso: " + caminho;
+        } catch (IOException e) {
+            return "Erro ao exportar CSV: " + e.getMessage();
+        }
+    }
+
+    public int totalReservas() {
+        return reservaDAO.listar().size();
+    }
+}

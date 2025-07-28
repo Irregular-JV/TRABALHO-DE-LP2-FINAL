@@ -1,3 +1,6 @@
 # .gitignore
 *.class
 *.db
+MainTeste.java
+/docs
+*.csv
