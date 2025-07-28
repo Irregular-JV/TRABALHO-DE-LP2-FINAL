@@ -38,7 +38,7 @@ public class PainelGerenciarEspacos extends JPanel  {
 
 
         JLabel buscaMsg = new JLabel("Buscar por nome ou id");
-        buscaMsg.setFont(new Font("SansSerif", Font.BOLD, 18));
+        buscaMsg.setFont(new Font("SansSerif", Font.BOLD, 22));
         buscaMsg.setAlignmentX(LEFT_ALIGNMENT);
 
         JTextField campoBusca = new JTextField(20);

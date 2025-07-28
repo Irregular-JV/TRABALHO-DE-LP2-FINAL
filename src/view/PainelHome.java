@@ -27,7 +27,7 @@ public class PainelHome extends JPanel {
         painelTopo.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         JLabel saudacao = new JLabel("Bem-vindo, " + nome);
-        saudacao.setFont(new Font("SansSerif", Font.BOLD, 20));
+        saudacao.setFont(new Font("SansSerif", Font.BOLD, 22));
 
         JLabel subtitulo = new JLabel("Aqui você pode reservar salas, gerenciar espaços e muito mais.");
         subtitulo.setFont(new Font("SansSerif", Font.PLAIN, 14));
