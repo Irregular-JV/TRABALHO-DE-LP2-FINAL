@@ -27,7 +27,7 @@ public class PainelHome extends JPanel {
         painelTopo.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         JLabel saudacao = new JLabel("Bem-vindo, " + nome);
-        saudacao.setFont(new Font("SansSerif", Font.BOLD, 20));
+        saudacao.setFont(new Font("SansSerif", Font.BOLD, 22));
 
         JLabel subtitulo = new JLabel("Aqui você pode reservar salas, gerenciar espaços e muito mais.");
         subtitulo.setFont(new Font("SansSerif", Font.PLAIN, 14));
@@ -136,10 +136,8 @@ public class PainelHome extends JPanel {
         btn.setFocusPainted(false);
         btn.setBackground(Color.WHITE);
 
-        btn.addActionListener(_ -> {
+        btn.addActionListener(evt -> {
             if (nome.equals("Nova Reserva")) {
-                //JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
-                //new TelaNovaReserva(parent, idUsuario);
                 onNovaReserva.run();
             }
         });

@@ -90,7 +90,7 @@ public class TelaPrincipal extends JFrame{
             });
 
             // Evento de clique: marcar como ativo
-            btn.addActionListener(_ -> {
+            btn.addActionListener(evt -> {
 
                 if(nome.equals("Sair")) {
                     this.dispose(); //Fecha a tela principal
@@ -181,12 +181,13 @@ public class TelaPrincipal extends JFrame{
         PainelHome home = new PainelHome(nomeUsuario, idUsuario, () -> {
             new TelaNovaReserva(this, idUsuario, () -> painelReservas.atualizarReservas());
         });
+      
         PainelUsuarios painelUsuarios = new PainelUsuarios(this.nomeUsuario);
         UsuarioDAO dao = new UsuarioDAO();
 
         new PainelUsuariosController(painelUsuarios, dao);
 
-
+        
         painelRegistradores.put("Home", home);
         painelRegistradores.put("Gerenciar Espaços", new PainelGerenciarEspacos());
         painelRegistradores.put("Reservas", painelReservas);

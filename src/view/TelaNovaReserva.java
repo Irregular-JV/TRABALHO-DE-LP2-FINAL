@@ -4,6 +4,8 @@ import model.Reserva;
 import model.ReservaDAO;
 import org.jdatepicker.impl.*;
 
+import controller.ReservaController;
+
 import javax.swing.*;
 import java.awt.*;
 import java.text.ParseException;
@@ -18,11 +20,13 @@ public class TelaNovaReserva extends JDialog {
     private JComboBox<String> comboHoraFim;
     private Map<String, Integer> mapaEspacos;
     private final Runnable onSuccess;
+    private ReservaController reservaController;
 
     public TelaNovaReserva(JFrame parent, int idUsuario, Runnable onSuccess) {
         super(parent, "Nova Reserva", true);
         this.idUsuario = idUsuario;
         this.onSuccess = onSuccess;
+        this.reservaController = new ReservaController();
         setSize(400, 300);
         setLocationRelativeTo(parent);
         setLayout(new GridLayout(6, 2, 10, 10));
@@ -114,9 +118,8 @@ public class TelaNovaReserva extends JDialog {
             String fim = dataFormatada + "-" + horaFim;
 
             Reserva reserva = new Reserva(idEspaco, idUsuario, inicio, fim);
-            ReservaDAO dao = new ReservaDAO();
 
-            if (dao.salvarReserva(reserva)) {
+            if (reservaController.realizarReserva(reserva)) {
                 JOptionPane.showMessageDialog(this, "Reserva realizada com sucesso!");
                 dispose();
                 onSuccess.run();
