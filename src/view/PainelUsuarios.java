@@ -36,7 +36,7 @@ public class PainelUsuarios extends JPanel {
 
 
         JLabel user = new JLabel("Usúarios");
-        user.setFont(new Font("SansSerif", Font.BOLD, 18));
+        user.setFont(new Font("SansSerif", Font.BOLD, 22));
         user.setAlignmentX(LEFT_ALIGNMENT);
 
 
