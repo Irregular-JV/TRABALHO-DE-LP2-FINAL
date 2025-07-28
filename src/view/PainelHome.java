@@ -1,17 +1,28 @@
 package view;
 
 import javax.swing.*;
+
+import model.*;
+
 import java.awt.*;
+
+import java.util.List;
 
 public class PainelHome extends JPanel {
     private String nome;
     private int idUsuario;
     private final Runnable onNovaReserva;
+    private UsuarioDAO usuarioDAO;
+    private EspacoDAO espacoDAO;
+    private ReservaDAO reservaDAO;
 
     public PainelHome(String nome, int idUsuario, Runnable onNovaReserva) {
         this.nome = nome;
         this.idUsuario = idUsuario;
 
+        this.espacoDAO = new EspacoDAO();
+        this.usuarioDAO = new UsuarioDAO();
+         this.reservaDAO = new ReservaDAO();
         this.onNovaReserva = onNovaReserva;
         this.setLayout(new BorderLayout());
         this.setBackground(Color.WHITE);
@@ -52,10 +63,12 @@ public class PainelHome extends JPanel {
         painelCartoes.setAlignmentX(Component.LEFT_ALIGNMENT);
         painelCartoes.setMaximumSize(new Dimension(900, 400));
 
-        painelCartoes.add(criarCartao("Salas disponíveis", "12", Color.WHITE));
-        painelCartoes.add(criarCartao("Reservas hoje", "7", Color.WHITE));
-        painelCartoes.add(criarCartao("Espaços cadastrados", "23", Color.WHITE));
-        painelCartoes.add(criarCartao("Usuários ativos", "48", Color.WHITE));
+        List<Reserva> reservas = reservaDAO.listar();
+        painelCartoes.add(criarCartao("Reservas", Integer.toString(reservas.size()), Color.WHITE));
+        List<Espaco> espacos = espacoDAO.listarTodos();
+        painelCartoes.add(criarCartao("Espaços cadastrados", Integer.toString(espacos.size()), Color.WHITE));
+        List<Usuario> usuarios = usuarioDAO.listarTodos();
+        painelCartoes.add(criarCartao("Usuários cadastrados", Integer.toString(usuarios.size()), Color.WHITE));
 
         painelCentro.add(painelCartoes);
         painelCentro.add(Box.createVerticalStrut(15));
