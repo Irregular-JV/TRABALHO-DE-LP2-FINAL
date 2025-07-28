@@ -8,7 +8,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import controller.EntrarController;
 import model.UsuarioDAO;
 
 import java.awt.BorderLayout;
@@ -103,13 +102,17 @@ public class TelaPrincipal extends JFrame{
                 if (botaoAtivo != null) {
                     botaoAtivo.setBackground(corFundo);
                 }
-                btn.setBackground(new Color(210, 225, 255)); // cor de seleção
+                btn.setBackground(new Color(210, 225, 255));
                 botaoAtivo = btn;
 
-               if(painelRegistradores.containsKey(nome)) {
+                if (painelRegistradores.containsKey(nome)) {
+                    if (nome.equals("Logs")) {
+                        PainelLogs painelLogs = (PainelLogs) painelRegistradores.get("Logs");
+                        painelLogs.atualizarLog();
+                    }
                     CardLayout c1 = (CardLayout) painelPrincipal.getLayout();
                     c1.show(painelPrincipal, nome);
-               }
+                }
             });
 
                 menuLateral.add(btn);

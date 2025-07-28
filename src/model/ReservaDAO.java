@@ -11,6 +11,7 @@ import controller.RelatorioController;
 public class ReservaDAO {
     private Connection connection;
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private UsuarioDAO usuarioDAO = new UsuarioDAO();
 
     public ReservaDAO() {
         this.connection = new ConnectionFactory().getConnection();
@@ -65,8 +66,10 @@ public class ReservaDAO {
             String inicioFormatado = reserva.getInicio().format(exibicaoFormatter);
             String fimFormatado = reserva.getFim().format(exibicaoFormatter);
 
+            String username = usuarioDAO.buscarPorId(reserva.getIdUsuario()).getUsername();
+
             RelatorioController.registrarLog(
-                "Reserva criada: usuário " + reserva.getIdUsuario() +
+                "Reserva criada pelo usuário " +  username + " (ID:" + reserva.getIdUsuario() + ")" +
                 " no espaço " + reserva.getIdEspaco() +
                 " de " + inicioFormatado +
                 " até " + fimFormatado
