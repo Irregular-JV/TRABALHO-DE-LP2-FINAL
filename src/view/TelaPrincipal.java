@@ -8,7 +8,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import controller.EntrarController;
 import model.UsuarioDAO;
 
 import java.awt.BorderLayout;
@@ -103,13 +102,17 @@ public class TelaPrincipal extends JFrame{
                 if (botaoAtivo != null) {
                     botaoAtivo.setBackground(corFundo);
                 }
-                btn.setBackground(new Color(210, 225, 255)); // cor de seleção
+                btn.setBackground(new Color(210, 225, 255));
                 botaoAtivo = btn;
 
-               if(painelRegistradores.containsKey(nome)) {
+                if (painelRegistradores.containsKey(nome)) {
+                    if (nome.equals("Logs")) {
+                        PainelLogs painelLogs = (PainelLogs) painelRegistradores.get("Logs");
+                        painelLogs.atualizarLog();
+                    }
                     CardLayout c1 = (CardLayout) painelPrincipal.getLayout();
                     c1.show(painelPrincipal, nome);
-               }
+                }
             });
 
                 menuLateral.add(btn);
@@ -178,9 +181,19 @@ public class TelaPrincipal extends JFrame{
 
     public void registrarPaineis() {
         painelReservas = new PainelReservas();
-        PainelHome home = new PainelHome(nomeUsuario, idUsuario, () -> {
-            new TelaNovaReserva(this, idUsuario, () -> painelReservas.atualizarReservas());
-        });
+    
+        CardLayout layout = (CardLayout) painelPrincipal.getLayout();
+        Map<String, Runnable> acoesHome = new HashMap<>();
+
+        acoesHome.put("Reservas", () -> layout.show(painelPrincipal, "Reservas"));
+        acoesHome.put("Gerenciar Espaços", () -> layout.show(painelPrincipal, "Gerenciar Espaços"));
+        acoesHome.put("Usuários", () -> layout.show(painelPrincipal, "Usuários"));
+
+        painelReservas = new PainelReservas();
+        PainelHome home = new PainelHome(nomeUsuario, idUsuario, 
+            () -> new TelaNovaReserva(this, idUsuario, () -> painelReservas.atualizarReservas()), 
+            acoesHome // Passa o mapa de ações
+        );
       
         PainelUsuarios painelUsuarios = new PainelUsuarios(this.nomeUsuario);
         UsuarioDAO dao = new UsuarioDAO();
@@ -198,7 +211,7 @@ public class TelaPrincipal extends JFrame{
         for(Map.Entry<String, JPanel> entry: painelRegistradores.entrySet()) {
             painelPrincipal.add(entry.getValue(), entry.getKey());
         }
-        CardLayout layout = (CardLayout) painelPrincipal.getLayout();
-        layout.show(painelPrincipal, "Home"); // mostra o painel Home ao iniciar
+        
+        layout.show(painelPrincipal, "Home");
     }
 }

@@ -7,6 +7,7 @@ import model.*;
 import java.awt.*;
 
 import java.util.List;
+import java.util.Map;
 
 public class PainelHome extends JPanel {
     private String nome;
@@ -15,15 +16,17 @@ public class PainelHome extends JPanel {
     private UsuarioDAO usuarioDAO;
     private EspacoDAO espacoDAO;
     private ReservaDAO reservaDAO;
+    private final Map<String, Runnable> acoesDeNavegacao;
 
-    public PainelHome(String nome, int idUsuario, Runnable onNovaReserva) {
+    public PainelHome(String nome, int idUsuario, Runnable onNovaReserva, Map<String, Runnable> acoesDeNavegacao) {
         this.nome = nome;
         this.idUsuario = idUsuario;
 
         this.espacoDAO = new EspacoDAO();
         this.usuarioDAO = new UsuarioDAO();
-         this.reservaDAO = new ReservaDAO();
+        this.reservaDAO = new ReservaDAO();
         this.onNovaReserva = onNovaReserva;
+         this.acoesDeNavegacao = acoesDeNavegacao;
         this.setLayout(new BorderLayout());
         this.setBackground(Color.WHITE);
 
@@ -64,11 +67,11 @@ public class PainelHome extends JPanel {
         painelCartoes.setMaximumSize(new Dimension(900, 400));
 
         List<Reserva> reservas = reservaDAO.listar();
-        painelCartoes.add(criarCartao("Reservas", Integer.toString(reservas.size()), Color.WHITE));
+        painelCartoes.add(criarCartao("Reservas", Integer.toString(reservas.size()), Color.WHITE, "Reservas"));
         List<Espaco> espacos = espacoDAO.listarTodos();
-        painelCartoes.add(criarCartao("Espaços cadastrados", Integer.toString(espacos.size()), Color.WHITE));
+        painelCartoes.add(criarCartao("Espaços cadastrados", Integer.toString(espacos.size()), Color.WHITE, "Gerenciar Espaços"));
         List<Usuario> usuarios = usuarioDAO.listarTodos();
-        painelCartoes.add(criarCartao("Usuários cadastrados", Integer.toString(usuarios.size()), Color.WHITE));
+        painelCartoes.add(criarCartao("Usuários cadastrados", Integer.toString(usuarios.size()), Color.WHITE, "Usuários"));
 
         painelCentro.add(painelCartoes);
         painelCentro.add(Box.createVerticalStrut(15));
@@ -82,7 +85,11 @@ public class PainelHome extends JPanel {
         painelRodape.add(btnRodape("Nova Reserva"));
         painelRodape.add(Box.createHorizontalStrut(10));
         if("admin".equals(this.nome)){
-            painelRodape.add(btnRodape("Novo Espaço"));
+            JButton btnNovoEspaco = btnRodape("Novo Espaco");
+
+            PainelGerenciarEspacos espa = new PainelGerenciarEspacos();
+            btnNovoEspaco.addActionListener(e -> espa.abrirDialogNovoEspaco());
+            painelRodape.add(btnNovoEspaco);
             painelRodape.add(Box.createHorizontalStrut(10));
             painelRodape.add(btnRodape("Relatórios"));
         }
@@ -98,7 +105,7 @@ public class PainelHome extends JPanel {
         this.add(wrapper, BorderLayout.CENTER);
     }
 
-    public JPanel criarCartao(String titulo, String valor, Color cor) {
+    public JPanel criarCartao(String titulo, String valor, Color cor, String nomeAcao) {
         JPanel p1 = new JPanel();
         p1.setBackground(cor);
         p1.setLayout(new BoxLayout(p1, BoxLayout.Y_AXIS));
@@ -129,6 +136,11 @@ public class PainelHome extends JPanel {
         ));
         botao.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
+        Runnable acao = acoesDeNavegacao.get(nomeAcao);
+        if (acao != null) {
+            botao.addActionListener(e -> acao.run());
+        }
+
         p1.add(lblTitulo);
         p1.add(lblvalor);
         p1.add(Box.createVerticalStrut(15));
@@ -156,4 +168,5 @@ public class PainelHome extends JPanel {
         });
         return btn;
     }
+    
 }

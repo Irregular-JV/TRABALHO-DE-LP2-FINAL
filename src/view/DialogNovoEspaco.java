@@ -22,6 +22,15 @@ public class DialogNovoEspaco extends JDialog{
     private JTextField campoTipoEsporte;      // só aparece se tipo for Quadra
     private JComboBox<String> campoTipo;
 
+    private JTextField campoNome;
+    private JTextField campoCapacidade;
+
+    // Campos reutilizáveis:
+    private JTextField campoTipoLab;
+    private JCheckBox campoPalco;
+    private JTextField campoTipoPiso;
+    private JTextField campoQtdCarteiras;
+    private JTextField campoTipoMesa;
 
 
     public DialogNovoEspaco(JFrame parent) {
@@ -41,7 +50,8 @@ public class DialogNovoEspaco extends JDialog{
         painelConteudo.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
         painelConteudo.setBackground(Color.WHITE);
 
-        painelConteudo.add(campoComLabel("Nome", new JTextField()));
+        campoNome = new JTextField();
+        painelConteudo.add(campoComLabel("Nome", campoNome));
         painelConteudo.add(Box.createVerticalStrut(12));
 
         campoTipo = new JComboBox<>(new String[] {
@@ -60,7 +70,8 @@ public class DialogNovoEspaco extends JDialog{
 
         painelConteudo.add(Box.createVerticalStrut(12));
 
-        painelConteudo.add(campoComLabel("Capacidade", new JTextField()));
+        campoCapacidade = new JTextField();
+        painelConteudo.add(campoComLabel("Capacidade", campoCapacidade));
         painelConteudo.add(Box.createVerticalStrut(20));
 
         painelCamposEspecificos = new JPanel();
@@ -80,7 +91,19 @@ public class DialogNovoEspaco extends JDialog{
 
         
 
-        painelBotoes.add(btnTabel("Salvar"));
+        JButton btnSalvar = btnTabel("Salvar");
+        btnSalvar.addActionListener(e -> {
+            try {
+                getEspacoCriado(); // tenta construir objeto (validação implícita)
+                dispose(); // fecha se tudo estiver certo
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                javax.swing.JOptionPane.showMessageDialog(this, "Erro: verifique os campos preenchidos.");
+            }
+        });
+        painelBotoes.add(btnSalvar);
+
+        
         painelBotoes.add(btnTabel("Cancelar"));
 
         painelConteudo.add(Box.createVerticalStrut(10));
@@ -131,39 +154,70 @@ public class DialogNovoEspaco extends JDialog{
     }
 
     private void atualizarCamposEspecificos(String tipoSelecionado) {
-    painelCamposEspecificos.removeAll();
+        painelCamposEspecificos.removeAll();
 
-    if (tipoSelecionado.equals("Laboratório")) {
-        campoQtdComputadores = new JTextField();
-        JTextField campoTipoLab = new JTextField();
+        if (tipoSelecionado.equals("Laboratório")) {
+            campoQtdComputadores = new JTextField();
+            campoTipoLab = new JTextField();
 
-        painelCamposEspecificos.add(campoComLabel("Qtd. Computadores", campoQtdComputadores));
-        painelCamposEspecificos.add(campoComLabel("Tipo do Laboratório", campoTipoLab));
+            painelCamposEspecificos.add(campoComLabel("Qtd. Computadores", campoQtdComputadores));
+            painelCamposEspecificos.add(campoComLabel("Tipo do Laboratório", campoTipoLab));
 
-    } else if (tipoSelecionado.equals("Auditório")) {
-        JCheckBox campoPalco = new JCheckBox("Possui palco?");
-        campoPalco.setBackground(Color.WHITE);
-        painelCamposEspecificos.add(campoPalco);
+        } else if (tipoSelecionado.equals("Auditório")) {
+            campoPalco = new JCheckBox("Possui palco?");
+            campoPalco.setBackground(Color.WHITE);
+            painelCamposEspecificos.add(campoPalco);
 
-    } else if (tipoSelecionado.equals("Quadra")) {
-        campoTipoEsporte = new JTextField();
-        painelCamposEspecificos.add(campoComLabel("Esporte", campoTipoEsporte));
-        JTextField campoTipoPiso = new JTextField();
-        painelCamposEspecificos.add(campoComLabel("Tipo de Piso", campoTipoPiso));
+        } else if (tipoSelecionado.equals("Quadra")) {
+            campoTipoEsporte = new JTextField();
+            campoTipoPiso = new JTextField();
 
-    } else if (tipoSelecionado.equals("Sala de Reunião")) {
-        JTextField campoTipoPiso = new JTextField();
-        JTextField campoQtdCarteiras = new JTextField();
-        JTextField campoTipoMesa = new JTextField();
+            painelCamposEspecificos.add(campoComLabel("Esporte", campoTipoEsporte));
+            painelCamposEspecificos.add(campoComLabel("Tipo de Piso", campoTipoPiso));
 
-        painelCamposEspecificos.add(campoComLabel("Tipo de Piso", campoTipoPiso));
-        painelCamposEspecificos.add(campoComLabel("Qtd. Carteiras", campoQtdCarteiras));
-        painelCamposEspecificos.add(campoComLabel("Tipo de Mesa", campoTipoMesa));
+        } else if (tipoSelecionado.equals("Sala de Reunião")) {
+            campoTipoPiso = new JTextField();
+            campoQtdCarteiras = new JTextField();
+            campoTipoMesa = new JTextField();
+
+            painelCamposEspecificos.add(campoComLabel("Tipo de Piso", campoTipoPiso));
+            painelCamposEspecificos.add(campoComLabel("Qtd. Carteiras", campoQtdCarteiras));
+            painelCamposEspecificos.add(campoComLabel("Tipo de Mesa", campoTipoMesa));
+        }
+
+        painelCamposEspecificos.revalidate();
+        painelCamposEspecificos.repaint();
     }
 
-    painelCamposEspecificos.revalidate();
-    painelCamposEspecificos.repaint();
-}
+    public model.Espaco getEspacoCriado() {
+        String nome = campoNome.getText().trim();
+        int capacidade = Integer.parseInt(campoCapacidade.getText().trim());
+        String tipoSelecionado = (String) campoTipo.getSelectedItem();
+
+        return switch (tipoSelecionado) {
+            case "Laboratório" -> {
+                int qtdComputadores = Integer.parseInt(campoQtdComputadores.getText().trim());
+                String tipoLab = campoTipoLab.getText().trim();
+                yield new model.Laboratorio(0, capacidade, nome, tipoLab, qtdComputadores);
+            }
+            case "Auditório" -> {
+                boolean possui = campoPalco != null && campoPalco.isSelected();
+                yield new model.Auditorio(0, capacidade, nome, possui);
+            }
+            case "Quadra" -> {
+                String esporte = campoTipoEsporte.getText().trim();
+                String piso = campoTipoPiso.getText().trim();
+                yield new model.Quadra(0, capacidade, nome, esporte, piso);
+            }
+            case "Sala de Reunião" -> {
+                String mesa = campoTipoMesa.getText().trim();
+                yield new model.SalaDeReuniao(0, capacidade, nome, mesa);
+            }
+            default -> throw new IllegalArgumentException("Tipo inválido ou não tratado: " + tipoSelecionado);
+        };
+    }
+
+
  
 
 

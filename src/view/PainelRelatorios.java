@@ -1,11 +1,5 @@
 package view;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.*;
 
 import javax.swing.BorderFactory;
@@ -13,6 +7,8 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import controller.RelatorioController;
 
 public class PainelRelatorios extends JPanel {
 
@@ -46,6 +42,16 @@ public class PainelRelatorios extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 0;
         centro.add(btnGerar, gbc);
+
+        // faz o botao funcionar e gerar relatorio
+        btnGerar.addActionListener(e -> {
+            RelatorioController relatorioController = new RelatorioController();
+            String resultado = relatorioController.exportarReservasCSV("relatorio_reservas.csv");
+
+            // Exibe resultado no console ou em um popup
+            System.out.println(resultado);
+            javax.swing.JOptionPane.showMessageDialog(this, resultado);
+        });
 
         // Adiciona ao painel principal
         container.add(centro);

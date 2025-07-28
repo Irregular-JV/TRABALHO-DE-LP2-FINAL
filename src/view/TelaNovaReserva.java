@@ -11,6 +11,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -120,12 +124,39 @@ public class TelaNovaReserva extends JDialog {
                 return;
             }
 
-            String dataFormatada = new SimpleDateFormat("MM-dd").format(dataSelecionada);
+            // Converter Date para LocalDate
+            LocalDate dataLocal = dataSelecionada.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
 
+<<<<<<< HEAD
             String horaInicio = comboHoraInicio.getSelectedItem().toString();
             String horaFim = comboHoraFim.getSelectedItem().toString();
 
             Reserva reserva = new Reserva(idEspaco, idUsuario, dataFormatada, horaInicio, horaFim);
+=======
+            // Pegar as horas e minutos do comboHoraInicio e comboHoraFim
+            String horaInicioStr = comboHoraInicio.getSelectedItem().toString(); // ex: "07:30"
+            String horaFimStr = comboHoraFim.getSelectedItem().toString();       // ex: "08:20"
+
+            // Parse horas e minutos
+            int horaInicio = Integer.parseInt(horaInicioStr.substring(0, 2));
+            int minutoInicio = Integer.parseInt(horaInicioStr.substring(3, 5));
+
+            int horaFim = Integer.parseInt(horaFimStr.substring(0, 2));
+            int minutoFim = Integer.parseInt(horaFimStr.substring(3, 5));
+
+            LocalDateTime inicio = dataLocal.atTime(horaInicio, minutoInicio);
+            LocalDateTime fim = dataLocal.atTime(horaFim, minutoFim);
+
+            // Validar se horaFim é maior que horaInicio
+            if (!fim.isAfter(inicio)) {
+                JOptionPane.showMessageDialog(this, "Hora fim deve ser depois da hora início.");
+                return;
+            }
+
+            Reserva reserva = new Reserva(idEspaco, idUsuario, inicio, fim);
+>>>>>>> main
 
             if (reservaController.realizarReserva(reserva)) {
                 JOptionPane.showMessageDialog(this, "Reserva realizada com sucesso!");
