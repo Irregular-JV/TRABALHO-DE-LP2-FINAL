@@ -73,7 +73,7 @@ public class EntrarController implements ActionListener {
             
             Usuario usuarioRecemCriado = model.buscarPorUsername(username);
             view.dispose();
-            new TelaPrincipal(usuarioRecemCriado.getUsername()).setVisible(true);
+            new TelaPrincipal(usuarioRecemCriado.getUsername(), usuarioRecemCriado.getId()).setVisible(true);
 
         } catch (Exception e) {
             view.mostrarMensagem("Erro durante o cadastro: " + e.getMessage());
