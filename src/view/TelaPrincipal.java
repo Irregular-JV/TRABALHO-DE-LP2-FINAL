@@ -20,6 +20,7 @@ import java.awt.Font;
 import java.util.HashMap;
 import java.util.Map;
 
+import controller.*;
 
 
 public class TelaPrincipal extends JFrame{
@@ -115,15 +116,13 @@ public class TelaPrincipal extends JFrame{
                 menuLateral.add(Box.createVerticalStrut(10));
 
         }
-
-
-        
     }
-
 
     public void montarLayout() {
         menuLateral.setBackground(new Color(247, 249, 252));
         painelPrincipal.setBackground(Color.WHITE);
+
+        menuLateral.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         //Layout fixo: menu a esquerda, conteudo no centro
         menuLateral.setPreferredSize(new Dimension(200, 0));
@@ -182,13 +181,16 @@ public class TelaPrincipal extends JFrame{
         PainelHome home = new PainelHome(nomeUsuario, idUsuario, () -> {
             new TelaNovaReserva(this, idUsuario, () -> painelReservas.atualizarReservas());
         });
+        PainelUsuarios painelUsuarios = new PainelUsuarios(this.nomeUsuario);
+        UsuarioDAO dao = new UsuarioDAO();
 
+        new PainelUsuariosController(painelUsuarios, dao);
 
 
         painelRegistradores.put("Home", home);
         painelRegistradores.put("Gerenciar Espaços", new PainelGerenciarEspacos());
         painelRegistradores.put("Reservas", painelReservas);
-        painelRegistradores.put("Usuários", new PainelUsuarios());
+        painelRegistradores.put("Usuários", painelUsuarios);
         painelRegistradores.put("Relatórios", new PainelRelatorios());
         painelRegistradores.put("Logs", new PainelLogs());
 
@@ -198,6 +200,4 @@ public class TelaPrincipal extends JFrame{
         CardLayout layout = (CardLayout) painelPrincipal.getLayout();
         layout.show(painelPrincipal, "Home"); // mostra o painel Home ao iniciar
     }
-
-
 }

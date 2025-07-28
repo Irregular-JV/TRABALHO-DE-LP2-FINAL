@@ -2,6 +2,7 @@ package model;
 import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ConnectionFactory {
@@ -40,9 +41,21 @@ public class ConnectionFactory {
             );
         """;
 
+        String sqlVerificarAdmin = "SELECT COUNT(*) AS total FROM Usuario WHERE username = 'admin'";
+
+        String sqlInserirAdmin = "INSERT INTO Usuario (username, senha, nivelAcesso) VALUES ('admin', 'admin', 'admin')";
+
         try(Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
             System.out.println("Tabela 'Usuario' criada.");
+
+            ResultSet rs = stmt.executeQuery(sqlVerificarAdmin);
+
+            if (rs.next() && rs.getInt("total") == 0) {
+            
+            stmt.execute(sqlInserirAdmin);
+            System.out.println("Usuário 'admin' padrão criado com sucesso.");
+        }
         } catch (SQLException e){
             throw new RuntimeException("Erro ao criar tabela Usuario: " + e.getMessage());
         }

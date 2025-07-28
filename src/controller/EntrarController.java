@@ -40,8 +40,8 @@ public class EntrarController implements ActionListener {
             return;
         }
 
-        Usuario usuarioDoBanco = model.buscarPorUsername(username);
-
+        Usuario usuarioDoBanco = model.buscarPorUsername(username); 
+        
         if (usuarioDoBanco != null && usuarioDoBanco.getSenha().equals(senha)) {
             view.mostrarMensagem("Login bem-sucedido!");
             view.dispose();

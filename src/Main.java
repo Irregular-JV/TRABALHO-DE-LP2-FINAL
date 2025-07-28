@@ -1,7 +1,7 @@
 
-import view.TelaLogin;
+import view.*;
 import model.*;
-import controller.EntrarController;
+import controller.*;
 import javax.swing.SwingUtilities; // Import para boa prática de Swing
 
 public class Main {
