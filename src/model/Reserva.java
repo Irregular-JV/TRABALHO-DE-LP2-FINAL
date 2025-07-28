@@ -1,15 +1,16 @@
 package model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Reserva {
     private int id;
     private int idEspaco;
     private int idUsuario;
-    private String inicio;
-    private String fim;
+    private LocalDateTime inicio;
+    private LocalDateTime fim;
 
-    public Reserva(int idEspaco, int idUsuario, String inicio, String fim) {
+    public Reserva(int idEspaco, int idUsuario, LocalDateTime inicio, LocalDateTime fim) {
         this.idEspaco = idEspaco;
         this.idUsuario = idUsuario;
         this.inicio = inicio;
@@ -28,11 +29,11 @@ public class Reserva {
         return idUsuario;
     }
 
-    public String getInicio() {
+    public LocalDateTime getInicio() {
         return inicio;
     }
 
-    public String getFim() {
+    public LocalDateTime getFim() {
         return fim;
     }
 

@@ -12,6 +12,7 @@ public class EspacoController {
         this.dao = new EspacoDAO();
     }
 
+
     public void salvar(Espaco espaco) {
         dao.salvar(espaco);
     }
@@ -25,4 +26,8 @@ public class EspacoController {
     }
 
     // outros métodos como atualizar, buscar por tipo etc.
+    public List<Espaco> listarTodos() {
+        return dao.listarTodos();
+    }
+
 }

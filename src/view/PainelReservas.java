@@ -4,12 +4,20 @@ import model.Reserva;
 import javax.swing.*;
 
 import controller.ReservaController;
+import model.Espaco;
+import model.EspacoDAO;
+
+import model.Usuario;
+import model.UsuarioDAO;
 
 import java.awt.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class PainelReservas extends JPanel {
     private ReservaController reservaController;
+    private EspacoDAO espacoDAO;
+    private UsuarioDAO usuarioDAO;
     private JPanel painelCentro;
 
     public PainelReservas() {
@@ -36,6 +44,8 @@ public class PainelReservas extends JPanel {
         painelCentro.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 20));
 
         reservaController = new ReservaController();
+        espacoDAO = new EspacoDAO();
+        usuarioDAO = new UsuarioDAO();
         atualizarReservas();
 
         JScrollPane scrollPane = new JScrollPane(painelCentro);
@@ -74,24 +84,32 @@ public class PainelReservas extends JPanel {
                 BorderFactory.createLineBorder(new Color(220, 220, 220), 1, true),
                 BorderFactory.createEmptyBorder(15, 15, 15, 15)
         ));
-        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100)); // altura fixa, largura flexível
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120)); // altura fixa, largura flexível
 
-        JLabel lblEspaco = new JLabel("Espaço ID: " + reserva.getIdEspaco());
+        Espaco espaco = espacoDAO.buscarPorId(reserva.getIdEspaco());
+
+        JLabel lblEspaco = new JLabel("Espaço: " + espaco.getTipo());
         lblEspaco.setFont(new Font("SansSerif", Font.BOLD, 16));
         lblEspaco.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JLabel lblUsuario = new JLabel("Usuário ID: " + reserva.getIdUsuario());
+        JLabel lblLocalizacao = new JLabel("Localização: " + espaco.getLocalizacao());
+        lblLocalizacao.setFont(new Font("SansSerif", Font.BOLD, 16));
+        lblLocalizacao.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        Usuario usuario = usuarioDAO.buscarPorId(reserva.getIdUsuario());
+
+        JLabel lblUsuario = new JLabel("Usuário: " + usuario.getUsername());
         lblUsuario.setFont(new Font("SansSerif", Font.PLAIN, 14));
         lblUsuario.setForeground(Color.DARK_GRAY);
         lblUsuario.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Processa datas
-        String[] inicioParts = reserva.getInicio().split("-");
-        String[] fimParts = reserva.getFim().split("-");
+        // Usando os métodos do LocalDateTime para montar a data e hora
+        LocalDateTime inicio = reserva.getInicio();
+        LocalDateTime fim = reserva.getFim();
 
-        String data = inicioParts[1] + "/" + inicioParts[0]; // dd/MM
-        String horaInicio = inicioParts[2] + ":00";
-        String horaFim = fimParts[2] + ":00";
+        String data = String.format("%02d/%02d", inicio.getDayOfMonth(), inicio.getMonthValue());
+        String horaInicio = String.format("%02d:%02d", inicio.getHour(), inicio.getMinute());
+        String horaFim = String.format("%02d:%02d", fim.getHour(), fim.getMinute());
 
         JLabel lblHorario = new JLabel("Reserva dia " + data + " das " + horaInicio + " até " + horaFim);
         lblHorario.setFont(new Font("SansSerif", Font.PLAIN, 14));
@@ -99,12 +117,14 @@ public class PainelReservas extends JPanel {
         lblHorario.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         card.add(lblEspaco);
+        card.add(Box.createVerticalStrut(2));
+        card.add(lblLocalizacao);
         card.add(Box.createVerticalStrut(5));
         card.add(lblUsuario);
         card.add(Box.createVerticalStrut(5));
         card.add(lblHorario);
 
         return card;
-    }   
+    }
 
 }
