@@ -7,6 +7,7 @@ import java.util.List;
 
 public class ReservaController {
     private ReservaDAO dao;
+    private RelatorioController relatorioController;
 
     public ReservaController() {
         this.dao = new ReservaDAO();
