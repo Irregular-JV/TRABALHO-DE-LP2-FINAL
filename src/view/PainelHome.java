@@ -68,11 +68,12 @@ public class PainelHome extends JPanel {
 
         painelRodape.add(btnRodape("Nova Reserva"));
         painelRodape.add(Box.createHorizontalStrut(10));
-        painelRodape.add(btnRodape("Novo Espaço"));
-        painelRodape.add(Box.createHorizontalStrut(10));
-        painelRodape.add(btnRodape("Novo Usuário"));
-        painelRodape.add(Box.createHorizontalStrut(10));
-        painelRodape.add(btnRodape("Relatórios"));
+        if("admin".equals(this.nome)){
+            painelRodape.add(btnRodape("Novo Espaço"));
+            painelRodape.add(Box.createHorizontalStrut(10));
+            painelRodape.add(btnRodape("Relatórios"));
+        }
+        
 
         painelCentro.add(painelRodape);
 

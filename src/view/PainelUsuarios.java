@@ -1,25 +1,43 @@
 package view;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+
+import model.Usuario;
+import model.UsuarioDAO;
 
 
 public class PainelUsuarios extends JPanel {
-    public PainelUsuarios() {
+    private String nomeUsuarioLogado;
+    private JTable tabela;
+    JButton botaoRemover = new JButton();
+    private DefaultTableModel tableModel;
+    private UsuarioDAO usuarioDAO; 
+
+    public PainelUsuarios(String nomeUsuarioLogado) {
         this.setLayout(new BorderLayout());
         this.setBackground(Color.WHITE);
+        this.nomeUsuarioLogado = nomeUsuarioLogado;
+
+        this.usuarioDAO = new UsuarioDAO();
 
         this.add(configuraTopo(), BorderLayout.NORTH);      // Apenas título
         this.add(ConfigurarTabela(), BorderLayout.CENTER);   // Tabela + botões
+
+        carregarDadosNaTabela();
     }
 
     public JPanel configuraTopo() {
@@ -49,10 +67,15 @@ public class PainelUsuarios extends JPanel {
     public JPanel ConfigurarTabela() {
         //Modelo para visualização
         String[] colunas = { "ID", "Nome de Usuário", "Nivel de Acesso"};
-        Object[][] dados = {
+
+        tableModel = new DefaultTableModel(colunas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; 
+            }
         };
 
-        JTable tabela = new JTable(dados, colunas);
+        this.tabela = new JTable(tableModel);
         JScrollPane scrol = new JScrollPane(tabela);
 
         JPanel tabelaUser = new JPanel();
@@ -77,6 +100,14 @@ public class PainelUsuarios extends JPanel {
         tabela.setBackground(Color.WHITE);
         tabela.getTableHeader().setBackground(Color.WHITE);
 
+        javax.swing.table.TableColumnModel columnModel = tabela.getColumnModel();
+
+        javax.swing.table.TableColumn idColumn = columnModel.getColumn(0);
+
+        idColumn.setMinWidth(0);
+        idColumn.setMaxWidth(0);
+        idColumn.setWidth(0);
+
 
         tabelaUser.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         tabelaUser.add(scrol);
@@ -86,8 +117,10 @@ public class PainelUsuarios extends JPanel {
         painelBotoes.setLayout(new FlowLayout(FlowLayout.LEFT));
         painelBotoes.setBackground(Color.white);
 
-        painelBotoes.add(btnTabel("Novo Usuário"));
-        painelBotoes.add(btnTabel("Remover Usuário"));
+        if("admin".equals(this.nomeUsuarioLogado)){
+            this.botaoRemover = btnTabel("Remover Usuário");
+            painelBotoes.add(botaoRemover);
+        }
 
         tabelaUser.add(Box.createVerticalStrut(20)); // espaçamento opcional
         tabelaUser.add(painelBotoes); // adiciona os botões ao painel
@@ -95,17 +128,48 @@ public class PainelUsuarios extends JPanel {
         return tabelaUser;
     }
 
-        public JButton btnTabel(String nome) {
-            JButton btn = new JButton(nome);
-            btn.setFont(new Font("SansSerif", Font.BOLD, 16));
-            btn.setForeground(Color.black);
-            btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            btn.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(147, 220, 225), 1, true),
-                BorderFactory.createEmptyBorder(7, 20, 7, 20)
-            ));
-            btn.setFocusPainted(false);
-            btn.setBackground(Color.WHITE);
-            return btn;
+    public void addRemoverListener(ActionListener listener) {
+        this.botaoRemover.addActionListener(listener);
+    }
+
+     public int getIdUsuarioSelecionado() {
+        int selectedRow = tabela.getSelectedRow();
+        if (selectedRow == -1) {
+            return -1; 
         }
+        
+        return (int) tableModel.getValueAt(selectedRow, 0);
+    }
+
+    public void carregarDadosNaTabela() {
+        tableModel.setRowCount(0);
+
+        List<Usuario> usuarios = usuarioDAO.listarTodos();
+
+        for (Usuario u : usuarios) {
+            tableModel.addRow(new Object[]{
+                u.getId(),
+                u.getUsername(), 
+                u.getNivelAcesso()
+            });
+        }
+    }
+
+    public JButton btnTabel(String nome) {
+        JButton btn = new JButton(nome);
+        btn.setFont(new Font("SansSerif", Font.BOLD, 16));
+        btn.setForeground(Color.black);
+        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btn.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(147, 220, 225), 1, true),
+            BorderFactory.createEmptyBorder(7, 20, 7, 20)
+        ));
+        btn.setFocusPainted(false);
+        btn.setBackground(Color.WHITE);
+        return btn;
+    }
+
+    public void mostrarMensagem(String mensagem) {
+        JOptionPane.showMessageDialog(this, mensagem);
+    }
 }
