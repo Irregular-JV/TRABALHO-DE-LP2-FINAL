@@ -85,7 +85,11 @@ public class PainelHome extends JPanel {
         painelRodape.add(btnRodape("Nova Reserva"));
         painelRodape.add(Box.createHorizontalStrut(10));
         if("admin".equals(this.nome)){
-            painelRodape.add(btnRodape("Novo Espaço"));
+            JButton btnNovoEspaco = btnRodape("Novo Espaco");
+
+            PainelGerenciarEspacos espa = new PainelGerenciarEspacos();
+            btnNovoEspaco.addActionListener(e -> espa.abrirDialogNovoEspaco());
+            painelRodape.add(btnNovoEspaco);
             painelRodape.add(Box.createHorizontalStrut(10));
             painelRodape.add(btnRodape("Relatórios"));
         }
@@ -164,4 +168,5 @@ public class PainelHome extends JPanel {
         });
         return btn;
     }
+    
 }
