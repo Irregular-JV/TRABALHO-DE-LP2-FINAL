@@ -32,6 +32,7 @@ public class TelaLogin extends JFrame {
         configurarTelaLogin();
         configuraPainel();
         configurarComponentes();
+        this.getRootPane().setDefaultButton(botaoEntrar); 
     }
     
 
