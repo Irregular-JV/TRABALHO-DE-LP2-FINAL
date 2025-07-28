@@ -22,7 +22,7 @@ public class RelatorioController {
         if(!dir.exists()) dir.mkdirs();
         try(FileWriter writer = new FileWriter("docs/log.txt", true)){
             String timestamp = LocalDateTime.now().toString();
-            writer.write("[" + timestamp + "]" + mensagem + "\n");
+            writer.write("[" + timestamp + "] " + mensagem + "\n");
         } catch (IOException e){
             System.err.println("Erro ao registrar log: " + e.getMessage());
         }
