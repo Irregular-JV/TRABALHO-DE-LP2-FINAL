@@ -1,14 +1,15 @@
 package view;
 
 import model.Reserva;
-import model.ReservaDAO;
-
 import javax.swing.*;
+
+import controller.ReservaController;
+
 import java.awt.*;
 import java.util.List;
 
 public class PainelReservas extends JPanel {
-    private ReservaDAO reservaDAO;
+    private ReservaController reservaController;
     private JPanel painelCentro;
 
     public PainelReservas() {
@@ -34,7 +35,7 @@ public class PainelReservas extends JPanel {
         painelCentro.setLayout(new BoxLayout(painelCentro, BoxLayout.Y_AXIS));
         painelCentro.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 20));
 
-        reservaDAO = new ReservaDAO();
+        reservaController = new ReservaController();
         atualizarReservas();
 
         JScrollPane scrollPane = new JScrollPane(painelCentro);
@@ -45,7 +46,7 @@ public class PainelReservas extends JPanel {
     public void atualizarReservas() {
         painelCentro.removeAll();
 
-        List<Reserva> reservas = reservaDAO.listar();
+        List<Reserva> reservas = reservaController.listarReservas();
 
         if (reservas.isEmpty()) {
             JLabel vazio = new JLabel("Nenhuma reserva cadastrada.");
