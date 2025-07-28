@@ -167,6 +167,8 @@ public class EspacoDAO {
     public List<Espaco> listarTodos(){
         String sql = "SELECT * FROM Espaco";
         List<Espaco> espacos = new ArrayList<>();
+        System.out.println(sql);
+
 
         try (PreparedStatement stmt = connection.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery()) {
@@ -181,6 +183,7 @@ public class EspacoDAO {
                     case "Laboratorio" -> {
                         String tipoLaboratorio = rs.getString("tipoLaboratorio");
                         int quantidadeComputadores = rs.getInt("quantidadeComputadores");
+                        
                         espacos.add(new Laboratorio(id, capacidade, localizacao, tipoLaboratorio, quantidadeComputadores));
                     }
                     case "Auditorio" -> {

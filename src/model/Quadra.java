@@ -25,4 +25,9 @@ public class Quadra extends Espaco {
     public String getTipoPiso(){
         return this.tipoPiso;
     }
+
+    @Override
+    public String toString() {
+        return "Quadra" + " - " + getLocalizacao();
+    }
 }
