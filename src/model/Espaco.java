@@ -19,6 +19,10 @@ public abstract class Espaco {
         this.capacidade = capacidade;
     }
 
+    public String getTipo() {
+        return this.getClass().getSimpleName();
+    }
+
     public void setLocalizacao(String localizacao){
         this.localizacao = localizacao;
     }
