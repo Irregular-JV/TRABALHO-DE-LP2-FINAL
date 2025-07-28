@@ -15,4 +15,9 @@ public class Auditorio extends Espaco {
     public boolean getPossuiPalco(){
         return this.possuiPalco;
     }
+
+    @Override
+    public String toString() {
+        return "Auditório" + " - " + getLocalizacao();
+    }
 }
