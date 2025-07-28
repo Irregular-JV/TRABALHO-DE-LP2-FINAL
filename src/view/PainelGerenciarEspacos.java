@@ -6,11 +6,13 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 
 public class PainelGerenciarEspacos extends JPanel  {
@@ -69,10 +71,10 @@ public class PainelGerenciarEspacos extends JPanel  {
 
     public void ConfigurarTabela() {
         //Modelo para visualização
-        String[] colunas = { "ID", "Nome", "Tipo", "Capacidade"};
+        String[] colunas = {"Nome", "Tipo", "Capacidade"};
         Object[][] dados = {
-            { 1, "Sala 101", "Laboratório", 30},
-            { 2, "Auditório", "Auditório", 100}
+            {"Sala 101", "Laboratório", 30},
+            {"Auditório", "Auditório", 100}
         };
 
         JTable tabela = new JTable(dados, colunas);
@@ -109,7 +111,11 @@ public class PainelGerenciarEspacos extends JPanel  {
         painelBotoes.setLayout(new FlowLayout(FlowLayout.LEFT));
         painelBotoes.setBackground(Color.white);
 
-        painelBotoes.add(btnTabel("Novo Espaco"));
+        JButton btnNovoEspaco = btnTabel("Novo Espaco");
+
+        btnNovoEspaco.addActionListener(_ -> abrirDialogNovoEspaco());
+
+        painelBotoes.add(btnNovoEspaco);
         painelBotoes.add(btnTabel("Editar Espaço"));
         painelBotoes.add(btnTabel("Remover Espaço"));
 
@@ -130,18 +136,29 @@ public class PainelGerenciarEspacos extends JPanel  {
         this.add(rodape, BorderLayout.SOUTH);
     }
 
-        public JButton btnTabel(String nome) {
-            JButton btn = new JButton(nome);
-            btn.setFont(new Font("SansSerif", Font.BOLD, 16));
-            btn.setForeground(Color.black);
-            btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            btn.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(147, 220, 225), 1, true),
-                BorderFactory.createEmptyBorder(7, 20, 7, 20)
-            ));
-            btn.setFocusPainted(false);
-            btn.setBackground(Color.WHITE);
-            return btn;
-        }
+    public JButton btnTabel(String nome) {
+        JButton btn = new JButton(nome);
+        btn.setFont(new Font("SansSerif", Font.BOLD, 16));
+        btn.setForeground(Color.black);
+        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btn.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(147, 220, 225), 1, true),
+            BorderFactory.createEmptyBorder(7, 20, 7, 20)
+        ));
+        btn.setFocusPainted(false);
+        btn.setBackground(Color.WHITE);
+        return btn;
+    }
+
+    private void abrirDialogNovoEspaco() {
+        JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this); // recupera a janela pai
+        DialogNovoEspaco dialog = new DialogNovoEspaco(parentFrame);
+        dialog.setVisible(true);
+
+        // Logica para atualizar a tabela vem aqui em baixo
+
+    }
+
+
     
 }
