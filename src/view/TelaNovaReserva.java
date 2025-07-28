@@ -4,13 +4,19 @@ import model.Reserva;
 import model.ReservaDAO;
 import org.jdatepicker.impl.*;
 
+import controller.EspacoController;
 import controller.ReservaController;
 
 import javax.swing.*;
 import java.awt.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Date;
+import java.util.Calendar;
+import java.util.List;
 
 public class TelaNovaReserva extends JDialog {
     private int idUsuario;
@@ -21,21 +27,27 @@ public class TelaNovaReserva extends JDialog {
     private Map<String, Integer> mapaEspacos;
     private final Runnable onSuccess;
     private ReservaController reservaController;
+    private EspacoController espacoController;
 
     public TelaNovaReserva(JFrame parent, int idUsuario, Runnable onSuccess) {
         super(parent, "Nova Reserva", true);
         this.idUsuario = idUsuario;
         this.onSuccess = onSuccess;
         this.reservaController = new ReservaController();
+        this.espacoController = new EspacoController();
         setSize(400, 300);
         setLocationRelativeTo(parent);
         setLayout(new GridLayout(6, 2, 10, 10));
 
         // Simula os espaços com seus respectivos IDs
         mapaEspacos = new HashMap<>();
-        mapaEspacos.put("Auditório - Bloco A", 1);
-        mapaEspacos.put("Laboratório de Informática", 2);
-        mapaEspacos.put("Sala Multiuso", 3);
+        List<model.Espaco> espacos = espacoController.listarTodos();
+        System.out.println(espacos);
+        for (model.Espaco espaco : espacos) {
+            String nome = espaco.toString();
+            mapaEspacos.put(nome, espaco.getId());
+        }
+
 
         // Campo espaço
         add(new JLabel("Espaço:"));

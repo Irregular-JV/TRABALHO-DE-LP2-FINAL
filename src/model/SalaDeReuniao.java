@@ -15,4 +15,9 @@ public class SalaDeReuniao extends Espaco{
     public String getTipoMesa(){
         return this.tipoMesa;
     }
+
+    @Override
+    public String toString() {
+        return "Sala de reunião" + " - " + getLocalizacao();
+    }
 }

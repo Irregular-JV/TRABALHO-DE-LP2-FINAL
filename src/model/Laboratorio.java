@@ -25,4 +25,9 @@ public class Laboratorio extends Espaco{
     public int getQuantidadeComputadores(){
         return this.quantidadeComputadores;
     }
+
+    @Override
+    public String toString() {
+        return "Laboratório" + " - " + getLocalizacao();
+    }
 }

@@ -113,7 +113,7 @@ public class PainelGerenciarEspacos extends JPanel  {
 
         JButton btnNovoEspaco = btnTabel("Novo Espaco");
 
-        btnNovoEspaco.addActionListener(_ -> abrirDialogNovoEspaco());
+        btnNovoEspaco.addActionListener(evt -> abrirDialogNovoEspaco());
 
         painelBotoes.add(btnNovoEspaco);
         painelBotoes.add(btnTabel("Editar Espaço"));

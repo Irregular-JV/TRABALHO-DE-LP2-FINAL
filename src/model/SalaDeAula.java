@@ -15,4 +15,9 @@ public class SalaDeAula extends Espaco{
     public int getQuantidadeCarteiras(){
         return this.quantidadeCarteiras;
     }
+
+    @Override
+    public String toString() {
+        return "Sala de aula" + " - " + getLocalizacao();
+    }
 }
