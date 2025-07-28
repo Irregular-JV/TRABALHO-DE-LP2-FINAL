@@ -13,50 +13,54 @@ public class ReservaDAO {
         this.connection = new ConnectionFactory().getConnection();
     }
 
-    public boolean horarioDisponivel(int idEspaco, String inicio, String fim) {
-        String sql = "SELECT * FROM reservas WHERE id_espaco = ? AND " +
-                     "(inicio < ? AND fim > ?)";
+    public boolean horarioDisponivel(int idEspaco, String data, String inicio, String fim) {
+        // Verifica se início é antes de fim
+        if (inicio.compareTo(fim) >= 0) {
+            return false;
+        }
+
+        String sql = "SELECT * FROM reservas WHERE id_espaco = ? AND data = ? AND (inicio < ? AND fim > ?)";
 
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setInt(1, idEspaco);
-            stmt.setString(2, fim);
-            stmt.setString(3, inicio);
+            stmt.setString(2, data);
+            stmt.setString(3, fim);
+            stmt.setString(4, inicio);
 
             ResultSet rs = stmt.executeQuery();
-            boolean disponivel  = !rs.next();
-            RelatorioController.registrarLog(
-                disponivel
-                ? "Verificação de disponibilidade: espaço " + idEspaco + " disponível em " + inicio + "–" + fim
-                : "Verificação de disponibilidade: espaço " + idEspaco + " **não** disponível em " + inicio + "–" + fim
-            );
-            return disponivel; // Se não houver conflito, está disponível
+            boolean disponivel = !rs.next();
+
+            return disponivel;
 
         } catch (SQLException e) {
-            e.printStackTrace();
             return false;
         }
     }
 
+
     public boolean salvarReserva(Reserva reserva) {
-        if (!horarioDisponivel(reserva.getIdEspaco(), reserva.getInicio(), reserva.getFim())) {
+        if (!horarioDisponivel(reserva.getIdEspaco(), reserva.getData(), reserva.getHoraInicio(), reserva.getHoraFim())) {
             return false; // Horário ocupado
         }
 
-        String sql = "INSERT INTO reservas (id_espaco, id_usuario, inicio, fim) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO reservas (id_espaco, id_usuario, data, inicio, fim) VALUES (?, ?, ?, ?, ?)";
 
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setInt(1, reserva.getIdEspaco());
             stmt.setInt(2, reserva.getIdUsuario());
-            stmt.setString(3, reserva.getInicio());
-            stmt.setString(4, reserva.getFim());
+            stmt.setString(3, reserva.getData());
+            stmt.setString(4, reserva.getHoraInicio());
+            stmt.setString(5, reserva.getHoraFim());
             stmt.executeUpdate();
+
             RelatorioController.registrarLog(
                 "Reserva criada: usuário " + reserva.getIdUsuario() +
                 " no espaço " + reserva.getIdEspaco() +
-                " de " + reserva.getInicio() +
-                " até " + reserva.getFim()
+                " do dia " + reserva.getData() +
+                " de " + reserva.getHoraInicio() +
+                " até " + reserva.getHoraFim()
             );
             return true;
 
@@ -79,6 +83,7 @@ public class ReservaDAO {
                 Reserva r = new Reserva(
                     rs.getInt("id_espaco"),
                     rs.getInt("id_usuario"),
+                    rs.getString("data"),
                     rs.getString("inicio"),
                     rs.getString("fim")
                 );

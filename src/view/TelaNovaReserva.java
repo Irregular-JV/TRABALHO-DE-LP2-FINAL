@@ -42,7 +42,6 @@ public class TelaNovaReserva extends JDialog {
         // Simula os espaços com seus respectivos IDs
         mapaEspacos = new HashMap<>();
         List<model.Espaco> espacos = espacoController.listarTodos();
-        System.out.println(espacos);
         for (model.Espaco espaco : espacos) {
             String nome = espaco.toString();
             mapaEspacos.put(nome, espaco.getId());
@@ -123,13 +122,10 @@ public class TelaNovaReserva extends JDialog {
 
             String dataFormatada = new SimpleDateFormat("MM-dd").format(dataSelecionada);
 
-            String horaInicio = comboHoraInicio.getSelectedItem().toString().substring(0, 2);
-            String horaFim = comboHoraFim.getSelectedItem().toString().substring(0, 2);
+            String horaInicio = comboHoraInicio.getSelectedItem().toString();
+            String horaFim = comboHoraFim.getSelectedItem().toString();
 
-            String inicio = dataFormatada + "-" + horaInicio;
-            String fim = dataFormatada + "-" + horaFim;
-
-            Reserva reserva = new Reserva(idEspaco, idUsuario, inicio, fim);
+            Reserva reserva = new Reserva(idEspaco, idUsuario, dataFormatada, horaInicio, horaFim);
 
             if (reservaController.realizarReserva(reserva)) {
                 JOptionPane.showMessageDialog(this, "Reserva realizada com sucesso!");
@@ -146,7 +142,7 @@ public class TelaNovaReserva extends JDialog {
 
     // Formatter necessário para o JDatePicker
     public static class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
-        private final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
+        private final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM");
 
         @Override
         public Object stringToValue(String text) throws ParseException {

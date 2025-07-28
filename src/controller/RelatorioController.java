@@ -37,8 +37,9 @@ public class RelatorioController {
             writer.println("ID da Reserva: " + reserva.getId());
             writer.println("Espaço ID: " + reserva.getIdEspaco());
             writer.println("Usuário ID: " + reserva.getIdUsuario());
-            writer.println("Início: " + reserva.getInicio());
-            writer.println("Fim: " + reserva.getFim());
+            writer.println("Data: " + reserva.getData());
+            writer.println("Início: " + reserva.getHoraFim());
+            writer.println("Fim: " + reserva.getHoraFim());
             return "Comprovante gerado: " + nomeArquivo;
         } catch (IOException e) {
             return "Erro ao gerar comprovante: " + e.getMessage();
@@ -52,9 +53,9 @@ public class RelatorioController {
         String caminho = "docs/" + nomeArquivo;
 
         try (PrintWriter writer = new PrintWriter(caminho)) {
-            writer.println("ID,EspacoID,UsuarioID,Inicio,Fim");
+            writer.println("ID,EspacoID,UsuarioID,Data,Inicio,Fim");
             for (Reserva r : reservas) {
-                writer.printf("%d,%d,%d,%s,%s%n", r.getId(), r.getIdEspaco(), r.getIdUsuario(), r.getInicio(), r.getFim());
+                writer.printf("%d,%d,%d,%s,%s,%s%n", r.getId(), r.getIdEspaco(), r.getIdUsuario(), r.getData(), r.getHoraInicio(), r.getHoraFim());
             }
             return "Arquivo CSV gerado com sucesso: " + caminho;
         } catch (IOException e) {

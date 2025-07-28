@@ -102,13 +102,9 @@ public class PainelReservas extends JPanel {
         lblUsuario.setForeground(Color.DARK_GRAY);
         lblUsuario.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Processa datas
-        String[] inicioParts = reserva.getInicio().split("-");
-        String[] fimParts = reserva.getFim().split("-");
-
-        String data = inicioParts[1] + "/" + inicioParts[0]; // dd/MM
-        String horaInicio = inicioParts[2] + ":00";
-        String horaFim = fimParts[2] + ":00";
+        String data = reserva.getData();
+        String horaInicio = reserva.getHoraInicio();
+        String horaFim = reserva.getHoraFim();
 
         JLabel lblHorario = new JLabel("Reserva dia " + data + " das " + horaInicio + " até " + horaFim);
         lblHorario.setFont(new Font("SansSerif", Font.PLAIN, 14));
