@@ -177,12 +177,6 @@ public class PainelGerenciarEspacos extends JPanel  {
            controller.salvar(espaco);// salva no SQLite
            recarregarTabela(); // recarrega a tabela toda
 
-            modeloTabela.addRow(new Object[] {
-                espaco.getLocalizacao(),
-                espaco.getClass().getSimpleName(),
-                espaco.getCapacidade()
-            });
-
         } catch (Exception e) {
             // Sem problema — o usuário pode ter cancelado
             System.out.println("Criação de espaço cancelada ou inválida.");
