@@ -200,6 +200,8 @@ public class PainelGerenciarEspacos extends JPanel {
             detalhes.append("Tipo de Piso: ").append(quadra.getTipoPiso()).append("\n");
         } else if (espaco instanceof model.SalaDeReuniao sala) {
             detalhes.append("Tipo de Mesa: ").append(sala.getTipoMesa()).append("\n");
+        } else if (espaco instanceof model.SalaDeAula sala) {
+            detalhes.append("Qtd Carteiras: ").append(sala.getQuantidadeCarteiras()).append("\n");
         }
 
         JOptionPane.showMessageDialog(this, detalhes.toString(),
