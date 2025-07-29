@@ -57,26 +57,39 @@ public class PainelReservas extends JPanel {
         painelCentro.removeAll();
 
         List<Reserva> reservas = reservaController.listarReservas();
+        boolean encontrouAlguma = false;
 
-        if (reservas.isEmpty()) {
+        for (Reserva r : reservas) {
+            JPanel card = criarCartaoReserva(r);
+            if (card != null) {
+                painelCentro.add(card);
+                painelCentro.add(Box.createVerticalStrut(10));
+                encontrouAlguma = true;
+            }
+        }
+
+        if (!encontrouAlguma) {
             JLabel vazio = new JLabel("Nenhuma reserva cadastrada.");
             vazio.setFont(new Font("SansSerif", Font.ITALIC, 16));
             vazio.setForeground(Color.GRAY);
             painelCentro.add(vazio);
-        } else {
-            for (Reserva r : reservas) {
-                painelCentro.add(criarCartaoReserva(r));
-                painelCentro.add(Box.createVerticalStrut(10));
-            }
         }
 
         painelCentro.revalidate();
         painelCentro.repaint();
-        this.revalidate(); // também atualiza o PainelReservas em si
+        this.revalidate();
         this.repaint();
     }
 
+
     private JPanel criarCartaoReserva(Reserva reserva) {
+        Espaco espaco = espacoDAO.buscarPorId(reserva.getIdEspaco());
+
+        if (espaco == null) {
+            // Não cria card se o espaço não existe
+            return null;
+        }
+
         JPanel card = new JPanel();
         card.setBackground(Color.WHITE);
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
@@ -84,9 +97,7 @@ public class PainelReservas extends JPanel {
                 BorderFactory.createLineBorder(new Color(220, 220, 220), 1, true),
                 BorderFactory.createEmptyBorder(15, 15, 15, 15)
         ));
-        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120)); // altura fixa, largura flexível
-
-        Espaco espaco = espacoDAO.buscarPorId(reserva.getIdEspaco());
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
 
         JLabel lblEspaco = new JLabel("Espaço: " + espaco.getTipo());
         lblEspaco.setFont(new Font("SansSerif", Font.BOLD, 16));
@@ -103,7 +114,6 @@ public class PainelReservas extends JPanel {
         lblUsuario.setForeground(Color.DARK_GRAY);
         lblUsuario.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Usando os métodos do LocalDateTime para montar a data e hora
         LocalDateTime inicio = reserva.getInicio();
         LocalDateTime fim = reserva.getFim();
 
@@ -125,6 +135,7 @@ public class PainelReservas extends JPanel {
         card.add(lblHorario);
 
         return card;
-    }
+}
+
 
 }

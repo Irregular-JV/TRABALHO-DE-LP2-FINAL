@@ -216,9 +216,4 @@ public class DialogNovoEspaco extends JDialog{
             default -> throw new IllegalArgumentException("Tipo inválido ou não tratado: " + tipoSelecionado);
         };
     }
-
-
- 
-
-
 }

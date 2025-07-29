@@ -5,7 +5,6 @@ import javax.swing.*;
 import model.*;
 
 import java.awt.*;
-
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +25,7 @@ public class PainelHome extends JPanel {
         this.usuarioDAO = new UsuarioDAO();
         this.reservaDAO = new ReservaDAO();
         this.onNovaReserva = onNovaReserva;
-         this.acoesDeNavegacao = acoesDeNavegacao;
+        this.acoesDeNavegacao = acoesDeNavegacao;
         this.setLayout(new BorderLayout());
         this.setBackground(Color.WHITE);
 
@@ -65,9 +64,21 @@ public class PainelHome extends JPanel {
         painelCartoes.setBackground(Color.WHITE);
         painelCartoes.setAlignmentX(Component.LEFT_ALIGNMENT);
         painelCartoes.setMaximumSize(new Dimension(900, 400));
+        
+        List<Reserva> todasReservas = reservaDAO.listar();
 
-        List<Reserva> reservas = reservaDAO.listar();
-        painelCartoes.add(criarCartao("Reservas", Integer.toString(reservas.size()), Color.WHITE, "Reservas"));
+        // Filtra apenas as reservas que têm um espaço válido
+        int reservasValidas = 0;
+        for (Reserva r : todasReservas) {
+            Espaco e = espacoDAO.buscarPorId(r.getIdEspaco());
+            if (e != null) {
+                reservasValidas++;
+            }
+        }
+
+        painelCartoes.add(criarCartao("Reservas", Integer.toString(reservasValidas), Color.WHITE, "Reservas"));
+
+
         List<Espaco> espacos = espacoDAO.listarTodos();
         painelCartoes.add(criarCartao("Espaços cadastrados", Integer.toString(espacos.size()), Color.WHITE, "Gerenciar Espaços"));
         List<Usuario> usuarios = usuarioDAO.listarTodos();
@@ -84,16 +95,18 @@ public class PainelHome extends JPanel {
 
         painelRodape.add(btnRodape("Nova Reserva"));
         painelRodape.add(Box.createHorizontalStrut(10));
-        if("admin".equals(this.nome)){
-            JButton btnNovoEspaco = btnRodape("Novo Espaco");
 
-            PainelGerenciarEspacos espa = new PainelGerenciarEspacos();
-            btnNovoEspaco.addActionListener(e -> espa.abrirDialogNovoEspaco());
+        if ("admin".equals(this.nome)) {
+            JButton btnNovoEspaco = btnRodape("Novo Espaço");
+
+            // Cria painel com controller corretamente
+            PainelGerenciarEspacos painelEspacos = PainelGerenciarEspacos.criarComController();
+            btnNovoEspaco.addActionListener(e -> painelEspacos.getController().abrirDialogNovoEspaco());
+
             painelRodape.add(btnNovoEspaco);
             painelRodape.add(Box.createHorizontalStrut(10));
             painelRodape.add(btnRodape("Relatórios"));
         }
-        
 
         painelCentro.add(painelRodape);
 
@@ -168,5 +181,4 @@ public class PainelHome extends JPanel {
         });
         return btn;
     }
-    
 }
