@@ -77,8 +77,13 @@ public class PainelGerenciarEspacos extends JPanel  {
 
     public void ConfigurarTabela() {
         //Modelo para visualização
-        String[] colunas = {"Nome", "Tipo", "Capacidade"};
-        modeloTabela = new DefaultTableModel(new String[] {"Nome", "Tipo", "Capacidade"}, 0);
+       modeloTabela = new DefaultTableModel(new String[] {"Nome", "Tipo", "Capacidade"}, 0) {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false; // impede edição em todas as células
+        }
+        };
+
         tabela = new JTable(modeloTabela);
 
 
@@ -137,7 +142,18 @@ public class PainelGerenciarEspacos extends JPanel  {
                 esp.getClass().getSimpleName(),
                 esp.getCapacidade()
             });
-}
+        }
+
+        tabela.addMouseListener(new java.awt.event.MouseAdapter() {
+        public void mouseClicked(java.awt.event.MouseEvent evt) {
+            if (evt.getClickCount() == 2 && tabela.getSelectedRow() != -1) {
+                int row = tabela.getSelectedRow();
+                model.Espaco espacoSelecionado = controller.listarTodos().get(row); // ou armazene numa lista separada
+                mostrarDetalhesEspaco(espacoSelecionado);
+            }
+        }
+        });
+
 
     }
 
@@ -199,6 +215,29 @@ public class PainelGerenciarEspacos extends JPanel  {
             labelInfo.setText(modeloTabela.getRowCount() + " espaços encontrados");
         }
     }
+
+    public void mostrarDetalhesEspaco(model.Espaco espaco) {
+        StringBuilder detalhes = new StringBuilder();
+        detalhes.append("Nome: ").append(espaco.getLocalizacao()).append("\n");
+        detalhes.append("Capacidade: ").append(espaco.getCapacidade()).append("\n");
+        detalhes.append("Tipo: ").append(espaco.getClass().getSimpleName()).append("\n");
+
+        if (espaco instanceof model.Laboratorio lab) {
+            detalhes.append("Tipo do Laboratório: ").append(lab.getTipo()).append("\n");
+            detalhes.append("Qtd. Computadores: ").append(lab.getQuantidadeComputadores()).append("\n");
+        } else if (espaco instanceof model.Auditorio aud) {
+            detalhes.append("Possui Palco: ").append(aud.getPossuiPalco() ? "Sim" : "Não").append("\n");
+        } else if (espaco instanceof model.Quadra quadra) {
+            detalhes.append("Esporte: ").append(quadra.getTipoEsporte()).append("\n");
+            detalhes.append("Tipo de Piso: ").append(quadra.getTipoPiso()).append("\n");
+        } else if (espaco instanceof model.SalaDeReuniao sala) {
+            detalhes.append("Tipo de Mesa: ").append(sala.getTipoMesa()).append("\n");
+        }
+
+        javax.swing.JOptionPane.showMessageDialog(this, detalhes.toString(), 
+            "Detalhes do Espaço", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+    }
+
 
 
 
