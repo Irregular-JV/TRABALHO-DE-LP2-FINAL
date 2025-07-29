@@ -100,7 +100,7 @@ public class PainelHome extends JPanel {
             JButton btnNovoEspaco = btnRodape("Novo Espaço");
 
             // Cria painel com controller corretamente
-            PainelGerenciarEspacos painelEspacos = PainelGerenciarEspacos.criarComController();
+            PainelGerenciarEspacos painelEspacos = PainelGerenciarEspacos.criarComController(nome);
             btnNovoEspaco.addActionListener(e -> painelEspacos.getController().abrirDialogNovoEspaco());
 
             painelRodape.add(btnNovoEspaco);
