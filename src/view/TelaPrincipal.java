@@ -30,6 +30,7 @@ public class TelaPrincipal extends JFrame {
     private JButton botaoAtivo;
     private Map<String, JPanel> painelRegistradores = new HashMap<>();
     private PainelReservas painelReservas;
+    private PainelHome home;
 
     public TelaPrincipal(String nomeUsuario, int idUsuario) {
         super("Gestão de Espaços Acadêmicos");
@@ -86,6 +87,10 @@ public class TelaPrincipal extends JFrame {
                     new EntrarController(novaTelaLogin, new UsuarioDAO());
                     novaTelaLogin.setVisible(true);
                     return;
+                }
+
+                if (nome.equals("Home")){
+                    home.atualizarDados();
                 }
 
                 if (botaoAtivo != null) {
@@ -164,7 +169,7 @@ public class TelaPrincipal extends JFrame {
     }
 
     public void registrarPaineis() {
-        painelReservas = new PainelReservas();
+        painelReservas = new PainelReservas(() -> new TelaNovaReserva(this, idUsuario, () -> painelReservas.atualizarReservas()));
         CardLayout layout = (CardLayout) painelPrincipal.getLayout();
 
         Map<String, Runnable> acoesHome = new HashMap<>();
@@ -172,10 +177,9 @@ public class TelaPrincipal extends JFrame {
         acoesHome.put("Gerenciar Espaços", () -> layout.show(painelPrincipal, "Gerenciar Espaços"));
         acoesHome.put("Usuários", () -> layout.show(painelPrincipal, "Usuários"));
 
-        PainelHome home = new PainelHome(
+        this.home = new PainelHome(
             nomeUsuario,
             idUsuario,
-            () -> new TelaNovaReserva(this, idUsuario, () -> painelReservas.atualizarReservas()),
             acoesHome
         );
 

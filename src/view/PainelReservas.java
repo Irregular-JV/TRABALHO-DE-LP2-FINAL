@@ -19,38 +19,54 @@ public class PainelReservas extends JPanel {
     private EspacoDAO espacoDAO;
     private UsuarioDAO usuarioDAO;
     private JPanel painelCentro;
+    private final Runnable onNovaReserva;
 
-    public PainelReservas() {
+    public PainelReservas(Runnable onNovaReserva) {
+        // 1. Configuração do Painel Principal
         this.setBackground(Color.WHITE);
-        this.setLayout(new BorderLayout());
+        this.setLayout(new BorderLayout()); // O layout principal que vai organizar tudo
+        this.onNovaReserva = onNovaReserva;
 
-        // Título no topo
+        // --- INICIALIZAÇÃO (continua igual) ---
+        reservaController = new ReservaController();
+        espacoDAO = new EspacoDAO();
+        usuarioDAO = new UsuarioDAO();
+
+        // --- 2. PAINEL DO TOPO (seu código, sem mudanças) ---
         JPanel painelTopo = new JPanel();
         painelTopo.setBackground(Color.WHITE);
         painelTopo.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         painelTopo.setLayout(new BoxLayout(painelTopo, BoxLayout.Y_AXIS));
-
         JLabel titulo = new JLabel("Reservas Cadastradas");
         titulo.setFont(new Font("SansSerif", Font.BOLD, 24));
         titulo.setForeground(Color.DARK_GRAY);
-
         painelTopo.add(titulo);
         this.add(painelTopo, BorderLayout.NORTH);
 
-        // Painel central que vai conter os cards das reservas
+        // --- 3. PAINEL CENTRAL (COM ROLAGEM) ---
+        // Este painel vai conter APENAS os cards de reserva
         painelCentro = new JPanel();
         painelCentro.setBackground(Color.WHITE);
         painelCentro.setLayout(new BoxLayout(painelCentro, BoxLayout.Y_AXIS));
         painelCentro.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 20));
 
-        reservaController = new ReservaController();
-        espacoDAO = new EspacoDAO();
-        usuarioDAO = new UsuarioDAO();
-        atualizarReservas();
-
+        // Colocamos o painel de cards dentro da barra de rolagem
         JScrollPane scrollPane = new JScrollPane(painelCentro);
-        scrollPane.setBorder(null);
-        this.add(scrollPane, BorderLayout.CENTER);
+        scrollPane.setBorder(null); // Remove a borda do scrollpane
+        this.add(scrollPane, BorderLayout.CENTER); // Adiciona ao CENTRO do layout principal
+
+        // --- 4. PAINEL DO RODAPÉ (COM O BOTÃO) ---
+        JPanel painelRodape = new JPanel(new FlowLayout(FlowLayout.LEFT)); // Alinhado à esquerda
+        painelRodape.setBackground(Color.WHITE);
+        painelRodape.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20)); // Padding
+
+        JButton btnNovaReserva = btnRodape("Nova Reserva"); // Usa seu método helper
+        painelRodape.add(btnNovaReserva);
+
+        this.add(painelRodape, BorderLayout.SOUTH); // Adiciona ao SUL do layout principal
+
+        // --- 5. CARGA INICIAL DOS DADOS (continua igual) ---
+        atualizarReservas();
     }
 
     public void atualizarReservas() {
@@ -103,7 +119,7 @@ public class PainelReservas extends JPanel {
         lblEspaco.setFont(new Font("SansSerif", Font.BOLD, 16));
         lblEspaco.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JLabel lblLocalizacao = new JLabel("Localização: " + espaco.getLocalizacao());
+        JLabel lblLocalizacao = new JLabel("Nome: " + espaco.getLocalizacao());
         lblLocalizacao.setFont(new Font("SansSerif", Font.BOLD, 16));
         lblLocalizacao.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -135,7 +151,27 @@ public class PainelReservas extends JPanel {
         card.add(lblHorario);
 
         return card;
-}
+    }
+
+    public JButton btnRodape(String nome) {
+        JButton btn = new JButton(nome);
+        btn.setFont(new Font("SansSerif", Font.BOLD, 18));
+        btn.setForeground(Color.black);
+        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btn.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(147, 220, 225), 1, true),
+                BorderFactory.createEmptyBorder(10, 20, 10, 20)
+        ));
+        btn.setFocusPainted(false);
+        btn.setBackground(Color.WHITE);
+
+        btn.addActionListener(evt -> {
+            if (nome.equals("Nova Reserva")) {
+                onNovaReserva.run();
+            }
+        });
+        return btn;
+    }
 
 
 }

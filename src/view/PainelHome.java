@@ -11,25 +11,27 @@ import java.util.Map;
 public class PainelHome extends JPanel {
     private String nome;
     private int idUsuario;
-    private final Runnable onNovaReserva;
     private UsuarioDAO usuarioDAO;
     private EspacoDAO espacoDAO;
     private ReservaDAO reservaDAO;
     private final Map<String, Runnable> acoesDeNavegacao;
+    private JLabel lblValorReservas;
+    private JLabel lblValorEspacos;
+    private JLabel lblValorUsuarios;
 
-    public PainelHome(String nome, int idUsuario, Runnable onNovaReserva, Map<String, Runnable> acoesDeNavegacao) {
+    public PainelHome(String nome, int idUsuario, Map<String, Runnable> acoesDeNavegacao) {
         this.nome = nome;
         this.idUsuario = idUsuario;
 
         this.espacoDAO = new EspacoDAO();
         this.usuarioDAO = new UsuarioDAO();
         this.reservaDAO = new ReservaDAO();
-        this.onNovaReserva = onNovaReserva;
         this.acoesDeNavegacao = acoesDeNavegacao;
         this.setLayout(new BorderLayout());
         this.setBackground(Color.WHITE);
 
         configuraLayout();
+        atualizarDados();
     }
 
     public void configuraLayout() {
@@ -64,25 +66,14 @@ public class PainelHome extends JPanel {
         painelCartoes.setBackground(Color.WHITE);
         painelCartoes.setAlignmentX(Component.LEFT_ALIGNMENT);
         painelCartoes.setMaximumSize(new Dimension(900, 400));
-        
-        List<Reserva> todasReservas = reservaDAO.listar();
 
-        // Filtra apenas as reservas que têm um espaço válido
-        int reservasValidas = 0;
-        for (Reserva r : todasReservas) {
-            Espaco e = espacoDAO.buscarPorId(r.getIdEspaco());
-            if (e != null) {
-                reservasValidas++;
-            }
-        }
+        lblValorReservas = new JLabel("0");
+        lblValorEspacos = new JLabel("0");
+        lblValorUsuarios = new JLabel("0");
 
-        painelCartoes.add(criarCartao("Reservas", Integer.toString(reservasValidas), Color.WHITE, "Reservas"));
-
-
-        List<Espaco> espacos = espacoDAO.listarTodos();
-        painelCartoes.add(criarCartao("Espaços cadastrados", Integer.toString(espacos.size()), Color.WHITE, "Gerenciar Espaços"));
-        List<Usuario> usuarios = usuarioDAO.listarTodos();
-        painelCartoes.add(criarCartao("Usuários cadastrados", Integer.toString(usuarios.size()), Color.WHITE, "Usuários"));
+        painelCartoes.add(criarCartao("Reservas", lblValorReservas, Color.WHITE, "Reservas"));
+        painelCartoes.add(criarCartao("Espaços cadastrados", lblValorEspacos, Color.WHITE, "Gerenciar Espaços"));
+        painelCartoes.add(criarCartao("Usuários cadastrados", lblValorUsuarios, Color.WHITE, "Usuários"));
 
         painelCentro.add(painelCartoes);
         painelCentro.add(Box.createVerticalStrut(15));
@@ -93,20 +84,7 @@ public class PainelHome extends JPanel {
         painelRodape.setAlignmentX(Component.LEFT_ALIGNMENT);
         painelRodape.setBackground(Color.WHITE);
 
-        painelRodape.add(btnRodape("Nova Reserva"));
         painelRodape.add(Box.createHorizontalStrut(10));
-
-        if ("admin".equals(this.nome)) {
-            JButton btnNovoEspaco = btnRodape("Novo Espaço");
-
-            // Cria painel com controller corretamente
-            PainelGerenciarEspacos painelEspacos = PainelGerenciarEspacos.criarComController();
-            btnNovoEspaco.addActionListener(e -> painelEspacos.getController().abrirDialogNovoEspaco());
-
-            painelRodape.add(btnNovoEspaco);
-            painelRodape.add(Box.createHorizontalStrut(10));
-            painelRodape.add(btnRodape("Relatórios"));
-        }
 
         painelCentro.add(painelRodape);
 
@@ -118,7 +96,7 @@ public class PainelHome extends JPanel {
         this.add(wrapper, BorderLayout.CENTER);
     }
 
-    public JPanel criarCartao(String titulo, String valor, Color cor, String nomeAcao) {
+    public JPanel criarCartao(String titulo, JLabel lblValor, Color cor, String nomeAcao) {
         JPanel p1 = new JPanel();
         p1.setBackground(cor);
         p1.setLayout(new BoxLayout(p1, BoxLayout.Y_AXIS));
@@ -127,9 +105,8 @@ public class PainelHome extends JPanel {
                 BorderFactory.createEmptyBorder(15, 10, 15, 10)
         ));
 
-        JLabel lblvalor = new JLabel(valor);
-        lblvalor.setFont(new Font("SansSerif", Font.BOLD, 19));
-        lblvalor.setAlignmentX(Component.LEFT_ALIGNMENT);
+        lblValor.setFont(new Font("SansSerif", Font.BOLD, 19));
+        lblValor.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel lblTitulo = new JLabel(titulo);
         lblTitulo.setFont(new Font("SansSerif", Font.BOLD, 22));
@@ -155,30 +132,37 @@ public class PainelHome extends JPanel {
         }
 
         p1.add(lblTitulo);
-        p1.add(lblvalor);
+        p1.add(lblValor);
         p1.add(Box.createVerticalStrut(15));
         p1.add(botao);
 
         return p1;
     }
 
-    public JButton btnRodape(String nome) {
-        JButton btn = new JButton(nome);
-        btn.setFont(new Font("SansSerif", Font.BOLD, 18));
-        btn.setForeground(Color.black);
-        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btn.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(147, 220, 225), 1, true),
-                BorderFactory.createEmptyBorder(10, 20, 10, 20)
-        ));
-        btn.setFocusPainted(false);
-        btn.setBackground(Color.WHITE);
+     public void atualizarDados() {
+        System.out.println("PainelHome: Atualizando os contadores...");
+        try {
+            List<Reserva> todasReservas = reservaDAO.listar();
+            int reservasValidas = 0;
+            for (Reserva r : todasReservas) {
+                Espaco e = espacoDAO.buscarPorId(r.getIdEspaco());
+                if (e != null) {
+                    reservasValidas++;
+                }
+            } // Use o nome correto do seu método
+            List<Espaco> espacos = espacoDAO.listarTodos();
+            List<Usuario> usuarios = usuarioDAO.listarTodos();
 
-        btn.addActionListener(evt -> {
-            if (nome.equals("Nova Reserva")) {
-                onNovaReserva.run();
-            }
-        });
-        return btn;
+            // Atualiza o texto dos JLabels com os novos valores
+            lblValorReservas.setText(Integer.toString(reservasValidas));
+            lblValorEspacos.setText(Integer.toString(espacos.size()));
+            lblValorUsuarios.setText(Integer.toString(usuarios.size()));
+        } catch (Exception e) {
+            System.err.println("Erro ao atualizar dados do PainelHome: " + e.getMessage());
+            // Define como 0 em caso de erro
+            lblValorReservas.setText("0");
+            lblValorEspacos.setText("0");
+            lblValorUsuarios.setText("0");
+        }
     }
 }
