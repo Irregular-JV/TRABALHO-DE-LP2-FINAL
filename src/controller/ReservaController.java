@@ -19,4 +19,8 @@ public class ReservaController {
     public List<Reserva> listarReservas() {
         return dao.listar();
     }
+
+    public boolean removerReserva(int idReserva) {
+        return new ReservaDAO().remover(idReserva);
+    }
 }

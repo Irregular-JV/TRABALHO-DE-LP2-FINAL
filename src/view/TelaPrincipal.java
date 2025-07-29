@@ -6,6 +6,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import model.UsuarioDAO;
@@ -85,11 +86,20 @@ public class TelaPrincipal extends JFrame {
 
             btn.addActionListener(evt -> {
                 if (nome.equals("Sair")) {
-                    this.dispose();
-                    TelaLogin novaTelaLogin = new TelaLogin();
-                    new EntrarController(novaTelaLogin, new UsuarioDAO());
-                    novaTelaLogin.setVisible(true);
-                    return;
+                    int opcao = JOptionPane.showConfirmDialog(
+                        this, 
+                        "Tem certeza que deseja sair?",
+                        "Confirmação de saída",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE
+                    );
+                    if (opcao == JOptionPane.YES_OPTION) {
+                        this.dispose();
+                        TelaLogin novaTelaLogin = new TelaLogin();
+                        new EntrarController(novaTelaLogin, new UsuarioDAO());
+                        novaTelaLogin.setVisible(true);
+                        return;
+                    }
                 }
 
                 if (nome.equals("Home")){
@@ -176,7 +186,7 @@ public class TelaPrincipal extends JFrame {
     }
 
     public void registrarPaineis() {
-        painelReservas = new PainelReservas(() -> new TelaNovaReserva(this, idUsuario, () -> painelReservas.atualizarReservas()));
+        painelReservas = new PainelReservas(idUsuario, nomeUsuario, () -> new TelaNovaReserva(this, idUsuario, () -> painelReservas.atualizarReservas()));
         CardLayout layout = (CardLayout) painelPrincipal.getLayout();
 
         Map<String, Runnable> acoesHome = new HashMap<>();

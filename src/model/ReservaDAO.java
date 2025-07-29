@@ -113,4 +113,18 @@ public class ReservaDAO {
 
         return reservas;
     }
+
+    public boolean remover(int idReserva) {
+        System.out.println(idReserva);
+        String sql = "DELETE FROM reservas WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, idReserva);
+            int linhasAfetadas = stmt.executeUpdate();
+            RelatorioController.registrarLog("Reserva " + idReserva + " removida.");
+            return linhasAfetadas > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

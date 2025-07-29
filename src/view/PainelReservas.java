@@ -12,6 +12,7 @@ import model.UsuarioDAO;
 
 import java.awt.*;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.List;
 
 public class PainelReservas extends JPanel {
@@ -19,9 +20,13 @@ public class PainelReservas extends JPanel {
     private EspacoDAO espacoDAO;
     private UsuarioDAO usuarioDAO;
     private JPanel painelCentro;
+    private int idUsuario;
+    private String nomeUsuario;
     private final Runnable onNovaReserva;
 
-    public PainelReservas(Runnable onNovaReserva) {
+    public PainelReservas(int idUsuario, String nomeUsuario, Runnable onNovaReserva) {
+        this.idUsuario = idUsuario;
+        this.nomeUsuario = nomeUsuario;
         // 1. Configuração do Painel Principal
         this.setBackground(Color.WHITE);
         this.setLayout(new BorderLayout()); // O layout principal que vai organizar tudo
@@ -101,38 +106,34 @@ public class PainelReservas extends JPanel {
     private JPanel criarCartaoReserva(Reserva reserva) {
         Espaco espaco = espacoDAO.buscarPorId(reserva.getIdEspaco());
 
-        if (espaco == null) {
-            // Não cria card se o espaço não existe
-            return null;
-        }
+        if (espaco == null) return null;
 
-        JPanel card = new JPanel();
+        JPanel card = new JPanel(new BorderLayout());
         card.setBackground(Color.WHITE);
-        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
         card.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(220, 220, 220), 1, true),
-                BorderFactory.createEmptyBorder(15, 15, 15, 15)
+            BorderFactory.createLineBorder(new Color(220, 220, 220), 1, true),
+            BorderFactory.createEmptyBorder(15, 15, 15, 15)
         ));
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
 
+        // ----- Conteúdo à esquerda -----
+        JPanel conteudo = new JPanel();
+        conteudo.setLayout(new BoxLayout(conteudo, BoxLayout.Y_AXIS));
+        conteudo.setBackground(Color.WHITE);
+
         JLabel lblEspaco = new JLabel("Espaço: " + espaco.getTipo());
         lblEspaco.setFont(new Font("SansSerif", Font.BOLD, 16));
-        lblEspaco.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel lblLocalizacao = new JLabel("Nome: " + espaco.getLocalizacao());
         lblLocalizacao.setFont(new Font("SansSerif", Font.BOLD, 16));
-        lblLocalizacao.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         Usuario usuario = usuarioDAO.buscarPorId(reserva.getIdUsuario());
-
         JLabel lblUsuario = new JLabel("Usuário: " + usuario.getUsername());
         lblUsuario.setFont(new Font("SansSerif", Font.PLAIN, 14));
         lblUsuario.setForeground(Color.DARK_GRAY);
-        lblUsuario.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         LocalDateTime inicio = reserva.getInicio();
         LocalDateTime fim = reserva.getFim();
-
         String data = String.format("%02d/%02d", inicio.getDayOfMonth(), inicio.getMonthValue());
         String horaInicio = String.format("%02d:%02d", inicio.getHour(), inicio.getMinute());
         String horaFim = String.format("%02d:%02d", fim.getHour(), fim.getMinute());
@@ -140,15 +141,52 @@ public class PainelReservas extends JPanel {
         JLabel lblHorario = new JLabel("Reserva dia " + data + " das " + horaInicio + " até " + horaFim);
         lblHorario.setFont(new Font("SansSerif", Font.PLAIN, 14));
         lblHorario.setForeground(Color.DARK_GRAY);
-        lblHorario.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        card.add(lblEspaco);
-        card.add(Box.createVerticalStrut(2));
-        card.add(lblLocalizacao);
-        card.add(Box.createVerticalStrut(5));
-        card.add(lblUsuario);
-        card.add(Box.createVerticalStrut(5));
-        card.add(lblHorario);
+        conteudo.add(lblEspaco);
+        conteudo.add(Box.createVerticalStrut(2));
+        conteudo.add(lblLocalizacao);
+        conteudo.add(Box.createVerticalStrut(5));
+        conteudo.add(lblUsuario);
+        conteudo.add(Box.createVerticalStrut(5));
+        conteudo.add(lblHorario);
+
+        card.add(conteudo, BorderLayout.CENTER);
+
+        // ----- Botão de remover à direita -----
+        if (reserva.getIdUsuario() == idUsuario || nomeUsuario.equals("admin")) {
+            JButton btnRemover = new JButton();
+            btnRemover.setToolTipText("Remover reserva");
+            btnRemover.setContentAreaFilled(false);
+            btnRemover.setBorderPainted(false);
+            btnRemover.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+            ImageIcon trashIcon = new ImageIcon(getClass().getResource("/Resources/trash.png"));
+            Image img = trashIcon.getImage();
+            Image resizedImg = img.getScaledInstance(24, 24, Image.SCALE_SMOOTH);
+            trashIcon = new ImageIcon(resizedImg);
+            
+            btnRemover.setIcon(trashIcon);
+
+
+            btnRemover.addActionListener(evt -> {
+                int confirm = JOptionPane.showConfirmDialog(
+                    this,
+                    "Tem certeza que deseja remover esta reserva?",
+                    "Confirmação",
+                    JOptionPane.YES_NO_OPTION
+                );
+                if (confirm == JOptionPane.YES_OPTION) {
+                    reservaController.removerReserva(reserva.getId());
+                    atualizarReservas();
+                }
+            });
+
+            JPanel painelLateral = new JPanel(new GridBagLayout());
+            painelLateral.setBackground(Color.WHITE);
+            painelLateral.add(btnRemover);
+
+            card.add(painelLateral, BorderLayout.EAST);
+        }
 
         return card;
     }
