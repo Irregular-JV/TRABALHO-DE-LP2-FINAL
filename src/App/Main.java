@@ -27,7 +27,7 @@ public class Main {
     public static void setIcon(JFrame frame) {
         try {
             // Usamos Main.class para obter o caminho do recurso em um método estático
-            URL iconeURL = Main.class.getResource("/Resources/icon.png");
+            URL iconeURL = Main.class.getResource("/resources/icon.png");
             
             if (iconeURL != null) {
                 ImageIcon icone = new ImageIcon(iconeURL);

@@ -160,7 +160,7 @@ public class PainelReservas extends JPanel {
             btnRemover.setBorderPainted(false);
             btnRemover.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-            ImageIcon trashIcon = new ImageIcon(getClass().getResource("/Resources/trash.png"));
+            ImageIcon trashIcon = new ImageIcon(getClass().getResource("/resources/trash.png"));
             Image img = trashIcon.getImage();
             Image resizedImg = img.getScaledInstance(24, 24, Image.SCALE_SMOOTH);
             trashIcon = new ImageIcon(resizedImg);
