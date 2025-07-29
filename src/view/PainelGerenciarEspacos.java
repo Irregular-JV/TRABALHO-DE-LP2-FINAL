@@ -188,7 +188,7 @@ public class PainelGerenciarEspacos extends JPanel {
         StringBuilder detalhes = new StringBuilder();
         detalhes.append("Nome: ").append(espaco.getLocalizacao()).append("\n");
         detalhes.append("Capacidade: ").append(espaco.getCapacidade()).append("\n");
-        detalhes.append("Tipo: ").append(espaco.getClass().getSimpleName()).append("\n");
+        detalhes.append("Tipo: ").append(espaco.getTipo()).append("\n");
 
         if (espaco instanceof model.Laboratorio lab) {
             detalhes.append("Tipo do Laboratório: ").append(lab.getTipo()).append("\n");
@@ -200,6 +200,8 @@ public class PainelGerenciarEspacos extends JPanel {
             detalhes.append("Tipo de Piso: ").append(quadra.getTipoPiso()).append("\n");
         } else if (espaco instanceof model.SalaDeReuniao sala) {
             detalhes.append("Tipo de Mesa: ").append(sala.getTipoMesa()).append("\n");
+        } else if(espaco instanceof model.SalaDeAula sala) {
+            detalhes.append("QTD.Carteiras: ").append(sala.getQuantidadeCarteiras()).append("\n");
         }
 
         JOptionPane.showMessageDialog(this, detalhes.toString(),
