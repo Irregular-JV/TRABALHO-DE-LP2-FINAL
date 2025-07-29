@@ -21,6 +21,8 @@ import java.util.Map;
 
 import controller.*;
 
+import App.Main;
+
 public class TelaPrincipal extends JFrame {
     private String nomeUsuario;
     private int idUsuario;
@@ -36,6 +38,7 @@ public class TelaPrincipal extends JFrame {
         super("Gestão de Espaços Acadêmicos");
         this.nomeUsuario = nomeUsuario;
         this.idUsuario = idUsuario;
+        Main.setIcon(this);
         configurarJanela();
         configurarPaineis();
         montarLayout();
