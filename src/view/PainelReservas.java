@@ -48,11 +48,11 @@ public class PainelReservas extends JPanel {
         painelCentro = new JPanel();
         painelCentro.setBackground(Color.WHITE);
         painelCentro.setLayout(new BoxLayout(painelCentro, BoxLayout.Y_AXIS));
-        painelCentro.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 20));
+        painelCentro.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 20));
 
         // Colocamos o painel de cards dentro da barra de rolagem
         JScrollPane scrollPane = new JScrollPane(painelCentro);
-        scrollPane.setBorder(null); // Remove a borda do scrollpane
+        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220))); // Remove a borda do scrollpane
         this.add(scrollPane, BorderLayout.CENTER); // Adiciona ao CENTRO do layout principal
 
         // --- 4. PAINEL DO RODAPÉ (COM O BOTÃO) ---
