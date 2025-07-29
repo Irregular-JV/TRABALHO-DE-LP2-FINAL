@@ -4,8 +4,8 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-
 import controller.EspacoController;
+
 
 public class PainelGerenciarEspacos extends JPanel {
     private JTable tabela;
@@ -13,11 +13,13 @@ public class PainelGerenciarEspacos extends JPanel {
     private JLabel labelInfo;
     private controller.EspacoController controller;
     private java.util.List<model.Espaco> listaEspacos = new java.util.ArrayList<>();
+    private String nome;
 
     // Construtor vazio
-    public PainelGerenciarEspacos() {
+    public PainelGerenciarEspacos(String nome) {
         this.setLayout(new BorderLayout());
         this.setBackground(Color.WHITE);
+        this.nome = nome;
     }
 
     // Método para associar o controller e configurar a interface
@@ -29,8 +31,8 @@ public class PainelGerenciarEspacos extends JPanel {
     }
 
     // Método de fábrica que cria o painel com controller integrado
-    public static PainelGerenciarEspacos criarComController() {
-        PainelGerenciarEspacos painel = new PainelGerenciarEspacos();
+    public static PainelGerenciarEspacos criarComController(String nome) {
+        PainelGerenciarEspacos painel = new PainelGerenciarEspacos(nome);
         controller.EspacoController controller = new controller.EspacoController(painel);
         painel.setController(controller);
         return painel;
@@ -47,25 +49,25 @@ public class PainelGerenciarEspacos extends JPanel {
         linhaBusca.setBackground(Color.WHITE);
         linhaBusca.setAlignmentX(LEFT_ALIGNMENT);
 
-        JLabel buscaMsg = new JLabel("Buscar por nome ou id");
+        JLabel buscaMsg = new JLabel("Gerenciar Espaços");
         buscaMsg.setFont(new Font("SansSerif", Font.BOLD, 22));
         buscaMsg.setAlignmentX(LEFT_ALIGNMENT);
 
-        JTextField campoBusca = new JTextField(20);
-        JButton btnBuscar = new JButton("Buscar");
-        btnBuscar.setFocusPainted(false);
-        btnBuscar.setFont(new Font("SansSerif", Font.BOLD, 16));
-        btnBuscar.setForeground(Color.black);
-        btnBuscar.setBackground(Color.WHITE);
-        btnBuscar.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(Color.black, 1, true),
-            BorderFactory.createEmptyBorder(5, 30, 5, 30)
-        ));
+        // JTextField campoBusca = new JTextField(20);
+        // JButton btnBuscar = new JButton("Buscar");
+        // btnBuscar.setFocusPainted(false);
+        // btnBuscar.setFont(new Font("SansSerif", Font.BOLD, 16));
+        // btnBuscar.setForeground(Color.black);
+        // btnBuscar.setBackground(Color.WHITE);
+        // btnBuscar.setBorder(BorderFactory.createCompoundBorder(
+        //     BorderFactory.createLineBorder(Color.black, 1, true),
+        //     BorderFactory.createEmptyBorder(5, 30, 5, 30)
+        // ));
 
-        campoBusca.setMaximumSize(new Dimension(500, 105));
-        linhaBusca.add(campoBusca);
-        linhaBusca.add(Box.createHorizontalStrut(15));
-        linhaBusca.add(btnBuscar);
+        // campoBusca.setMaximumSize(new Dimension(500, 105));
+        // linhaBusca.add(campoBusca);
+        // linhaBusca.add(Box.createHorizontalStrut(15));
+        // linhaBusca.add(btnBuscar);
 
         painelTopo.add(buscaMsg);
         painelTopo.add(Box.createVerticalStrut(5));
@@ -109,24 +111,21 @@ public class PainelGerenciarEspacos extends JPanel {
         JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.LEFT));
         painelBotoes.setBackground(Color.white);
 
-        JButton btnNovoEspaco = btnTabel("Novo Espaco");
-        btnNovoEspaco.setActionCommand("novo_espaco");
-        btnNovoEspaco.addActionListener(controller);
 
-        JButton btnEditar = btnTabel("Editar Espaço");
-        btnEditar.setActionCommand("editar_espaco");
-        btnEditar.addActionListener(controller);
+        if(nome.equals("admin")) {
+            JButton btnNovoEspaco = btnTabel("Novo Espaco");
+            btnNovoEspaco.setActionCommand("novo_espaco");
+            btnNovoEspaco.addActionListener(controller);
+            painelBotoes.add(btnNovoEspaco);
+            
+            JButton btnRemover = btnTabel("Remover Espaço");
+            btnRemover.setActionCommand("remover_espaco");
+            btnRemover.addActionListener(controller);
+            painelBotoes.add(btnRemover);
 
-        JButton btnRemover = btnTabel("Remover Espaço");
-        btnRemover.setActionCommand("remover_espaco");
-        btnRemover.addActionListener(controller);
-
-        painelBotoes.add(btnNovoEspaco);
-        painelBotoes.add(btnEditar);
-        painelBotoes.add(btnRemover);
-
-        tabelaEspaco.add(Box.createVerticalStrut(20));
-        tabelaEspaco.add(painelBotoes);
+            tabelaEspaco.add(Box.createVerticalStrut(20));
+            tabelaEspaco.add(painelBotoes);
+        }
 
         this.add(tabelaEspaco, BorderLayout.CENTER);
 
@@ -201,6 +200,8 @@ public class PainelGerenciarEspacos extends JPanel {
             detalhes.append("Tipo de Piso: ").append(quadra.getTipoPiso()).append("\n");
         } else if (espaco instanceof model.SalaDeReuniao sala) {
             detalhes.append("Tipo de Mesa: ").append(sala.getTipoMesa()).append("\n");
+        } else if (espaco instanceof model.SalaDeAula sala) {
+            detalhes.append("Qtd Carteiras: ").append(sala.getQuantidadeCarteiras()).append("\n");
         }
 
         JOptionPane.showMessageDialog(this, detalhes.toString(),
