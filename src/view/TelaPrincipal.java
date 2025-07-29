@@ -93,6 +93,10 @@ public class TelaPrincipal extends JFrame {
                     home.atualizarDados();
                 }
 
+                if (nome.equals("Reservas")){
+                    painelReservas.atualizarReservas();
+                }
+
                 if (botaoAtivo != null) {
                     botaoAtivo.setBackground(corFundo);
                 }
