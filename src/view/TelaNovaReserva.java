@@ -2,9 +2,10 @@ package view;
 
 import model.Reserva;
 import model.ReservaDAO;
+import model.Espaco;
+import model.EspacoDAO;
 import org.jdatepicker.impl.*;
 
-import controller.EspacoController;
 import controller.ReservaController;
 
 import javax.swing.*;
@@ -14,13 +15,9 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Date;
-import java.util.Calendar;
+import java.util.*;
 import java.util.List;
+
 
 public class TelaNovaReserva extends JDialog {
     private int idUsuario;
@@ -31,27 +28,24 @@ public class TelaNovaReserva extends JDialog {
     private Map<String, Integer> mapaEspacos;
     private final Runnable onSuccess;
     private ReservaController reservaController;
-    private EspacoController espacoController;
 
     public TelaNovaReserva(JFrame parent, int idUsuario, Runnable onSuccess) {
         super(parent, "Nova Reserva", true);
         this.idUsuario = idUsuario;
         this.onSuccess = onSuccess;
         this.reservaController = new ReservaController();
-        this.espacoController = new EspacoController();
         setSize(400, 300);
         setLocationRelativeTo(parent);
         setLayout(new GridLayout(6, 2, 10, 10));
 
-        // Simula os espaços com seus respectivos IDs
+        // Obtem os espaços com seus respectivos IDs
         mapaEspacos = new HashMap<>();
-        List<model.Espaco> espacos = espacoController.listarTodos();
-        System.out.println(espacos);
-        for (model.Espaco espaco : espacos) {
+        EspacoDAO espacoDAO = new EspacoDAO();
+        List<Espaco> espacos = espacoDAO.listarTodos();
+        for (Espaco espaco : espacos) {
             String nome = espaco.toString();
             mapaEspacos.put(nome, espaco.getId());
         }
-
 
         // Campo espaço
         add(new JLabel("Espaço:"));
@@ -125,16 +119,13 @@ public class TelaNovaReserva extends JDialog {
                 return;
             }
 
-            // Converter Date para LocalDate
             LocalDate dataLocal = dataSelecionada.toInstant()
                     .atZone(ZoneId.systemDefault())
                     .toLocalDate();
 
-            // Pegar as horas e minutos do comboHoraInicio e comboHoraFim
-            String horaInicioStr = comboHoraInicio.getSelectedItem().toString(); // ex: "07:30"
-            String horaFimStr = comboHoraFim.getSelectedItem().toString();       // ex: "08:20"
+            String horaInicioStr = comboHoraInicio.getSelectedItem().toString();
+            String horaFimStr = comboHoraFim.getSelectedItem().toString();
 
-            // Parse horas e minutos
             int horaInicio = Integer.parseInt(horaInicioStr.substring(0, 2));
             int minutoInicio = Integer.parseInt(horaInicioStr.substring(3, 5));
 
@@ -144,7 +135,6 @@ public class TelaNovaReserva extends JDialog {
             LocalDateTime inicio = dataLocal.atTime(horaInicio, minutoInicio);
             LocalDateTime fim = dataLocal.atTime(horaFim, minutoFim);
 
-            // Validar se horaFim é maior que horaInicio
             if (!fim.isAfter(inicio)) {
                 JOptionPane.showMessageDialog(this, "Hora fim deve ser depois da hora início.");
                 return;
@@ -165,7 +155,6 @@ public class TelaNovaReserva extends JDialog {
         }
     }
 
-    // Formatter necessário para o JDatePicker
     public static class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
         private final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
 
