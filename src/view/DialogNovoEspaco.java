@@ -21,6 +21,7 @@ public class DialogNovoEspaco extends JDialog{
     private JTextField campoQtdComputadores;  // só aparece se tipo for Laboratório
     private JTextField campoTipoEsporte;      // só aparece se tipo for Quadra
     private JComboBox<String> campoTipo;
+    private JButton btnSalvar;
 
     private JTextField campoNome;
     private JTextField campoCapacidade;
@@ -39,8 +40,8 @@ public class DialogNovoEspaco extends JDialog{
         this.setSize(400, 350);
         this.setLocationRelativeTo(parent); //Centraliza em relação ao pai
 
-
         inicializaComponentes();
+        this.getRootPane().setDefaultButton(btnSalvar); 
     }
 
     public void inicializaComponentes() {
@@ -90,7 +91,7 @@ public class DialogNovoEspaco extends JDialog{
 
         
 
-        JButton btnSalvar = btnTabel("Salvar");
+        this.btnSalvar = btnTabel("Salvar");
         btnSalvar.addActionListener(e -> {
             try {
                 getEspacoCriado(); // tenta construir objeto (validação implícita)
