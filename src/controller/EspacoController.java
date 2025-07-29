@@ -25,9 +25,9 @@ public class EspacoController {
         dao.deletar(id);
     }
 
-    // outros métodos como atualizar, buscar por tipo etc.
-    public List<Espaco> listarTodos() {
-        return dao.listarTodos();
-    }
+    // // outros métodos como atualizar, buscar  por tipo etc.
+    // public List<Espaco> listarTodos() {
+    //     return dao.listarTodos();
+    // }
 
 }
