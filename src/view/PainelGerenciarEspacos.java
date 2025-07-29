@@ -191,7 +191,7 @@ public class PainelGerenciarEspacos extends JPanel {
         detalhes.append("Tipo: ").append(espaco.getClass().getSimpleName()).append("\n");
 
         if (espaco instanceof model.Laboratorio lab) {
-            detalhes.append("Tipo do Laboratório: ").append(lab.getTipo()).append("\n");
+            detalhes.append("Tipo do Laboratório: ").append(lab.getTipoLaboratorio()).append("\n");
             detalhes.append("Qtd. Computadores: ").append(lab.getQuantidadeComputadores()).append("\n");
         } else if (espaco instanceof model.Auditorio aud) {
             detalhes.append("Possui Palco: ").append(aud.getPossuiPalco() ? "Sim" : "Não").append("\n");
