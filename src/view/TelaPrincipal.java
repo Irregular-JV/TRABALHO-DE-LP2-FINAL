@@ -183,7 +183,7 @@ public class TelaPrincipal extends JFrame {
         UsuarioDAO dao = new UsuarioDAO();
         new PainelUsuariosController(painelUsuarios, dao);
 
-        PainelGerenciarEspacos painelGerenciarEspacos = PainelGerenciarEspacos.criarComController();
+        PainelGerenciarEspacos painelGerenciarEspacos = PainelGerenciarEspacos.criarComController(nomeUsuario);
 
         painelRegistradores.put("Home", home);
         painelRegistradores.put("Gerenciar Espaços", painelGerenciarEspacos);
