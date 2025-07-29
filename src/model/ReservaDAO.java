@@ -127,4 +127,16 @@ public class ReservaDAO {
             return false;
         }
     }
+    public void removerReservasPorUsuario(int idUsuario) {
+        String sql = "DELETE FROM reservas WHERE id_usuario = ?";
+        try (Connection conn = new ConnectionFactory().getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idUsuario);
+            stmt.executeUpdate();
+
+            RelatorioController.registrarLog("Todas as reservas do usuário " + idUsuario + " foram removidas.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
