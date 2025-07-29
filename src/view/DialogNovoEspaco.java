@@ -21,6 +21,7 @@ public class DialogNovoEspaco extends JDialog{
     private JTextField campoQtdComputadores;  // só aparece se tipo for Laboratório
     private JTextField campoTipoEsporte;      // só aparece se tipo for Quadra
     private JComboBox<String> campoTipo;
+    private JButton btnSalvar;
 
     private JTextField campoNome;
     private JTextField campoCapacidade;
@@ -32,7 +33,6 @@ public class DialogNovoEspaco extends JDialog{
     private JTextField campoQtdCarteiras;
     private JTextField campoTipoMesa;
 
-
     public DialogNovoEspaco(JFrame parent) {
         super(parent, "Novo Espaço", true);
 
@@ -40,8 +40,8 @@ public class DialogNovoEspaco extends JDialog{
         this.setSize(400, 350);
         this.setLocationRelativeTo(parent); //Centraliza em relação ao pai
 
-
         inicializaComponentes();
+        this.getRootPane().setDefaultButton(btnSalvar); 
     }
 
     public void inicializaComponentes() {
@@ -55,7 +55,7 @@ public class DialogNovoEspaco extends JDialog{
         painelConteudo.add(Box.createVerticalStrut(12));
 
         campoTipo = new JComboBox<>(new String[] {
-            "Laboratório", "Auditório", "Quadra", "Sala de Reunião" 
+            "Laboratório", "Auditório", "Quadra", "Sala de Reunião" , "Sala de Aula"
         });
 
         painelConteudo.add(campoComLabel("Tipo", campoTipo));
@@ -91,7 +91,7 @@ public class DialogNovoEspaco extends JDialog{
 
         
 
-        JButton btnSalvar = btnTabel("Salvar");
+        this.btnSalvar = btnTabel("Salvar");
         btnSalvar.addActionListener(e -> {
             try {
                 getEspacoCriado(); // tenta construir objeto (validação implícita)
@@ -103,8 +103,13 @@ public class DialogNovoEspaco extends JDialog{
         });
         painelBotoes.add(btnSalvar);
 
-        
-        painelBotoes.add(btnTabel("Cancelar"));
+        JButton cancel = btnTabel("Cancelar");
+
+        cancel.addActionListener(e -> {
+            dispose();
+        });
+
+        painelBotoes.add(cancel);
 
         painelConteudo.add(Box.createVerticalStrut(10));
         painelConteudo.add(painelBotoes);
@@ -176,14 +181,13 @@ public class DialogNovoEspaco extends JDialog{
             painelCamposEspecificos.add(campoComLabel("Tipo de Piso", campoTipoPiso));
 
         } else if (tipoSelecionado.equals("Sala de Reunião")) {
-            campoTipoPiso = new JTextField();
-            campoQtdCarteiras = new JTextField();
             campoTipoMesa = new JTextField();
-
-            painelCamposEspecificos.add(campoComLabel("Tipo de Piso", campoTipoPiso));
-            painelCamposEspecificos.add(campoComLabel("Qtd. Carteiras", campoQtdCarteiras));
             painelCamposEspecificos.add(campoComLabel("Tipo de Mesa", campoTipoMesa));
+        } else if(tipoSelecionado.equals("Sala de Aula")) {
+            campoQtdCarteiras = new JTextField();
+            painelCamposEspecificos.add(campoComLabel("Qtd Carteiras", campoQtdCarteiras));
         }
+
 
         painelCamposEspecificos.revalidate();
         painelCamposEspecificos.repaint();
@@ -213,12 +217,11 @@ public class DialogNovoEspaco extends JDialog{
                 String mesa = campoTipoMesa.getText().trim();
                 yield new model.SalaDeReuniao(0, capacidade, nome, mesa);
             }
+            case "Sala de Aula" -> {
+                int qtdCarteiras = Integer.parseInt(campoQtdCarteiras.getText().trim());
+                yield new model.SalaDeAula(0, capacidade, nome, qtdCarteiras);
+            }
             default -> throw new IllegalArgumentException("Tipo inválido ou não tratado: " + tipoSelecionado);
         };
     }
-
-
- 
-
-
 }

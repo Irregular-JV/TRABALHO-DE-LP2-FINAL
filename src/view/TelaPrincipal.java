@@ -6,6 +6,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import model.UsuarioDAO;
@@ -21,8 +22,9 @@ import java.util.Map;
 
 import controller.*;
 
+import App.Main;
 
-public class TelaPrincipal extends JFrame{
+public class TelaPrincipal extends JFrame {
     private String nomeUsuario;
     private int idUsuario;
     private JPanel navBar;
@@ -31,56 +33,50 @@ public class TelaPrincipal extends JFrame{
     private JButton botaoAtivo;
     private Map<String, JPanel> painelRegistradores = new HashMap<>();
     private PainelReservas painelReservas;
-
+    private PainelHome home;
 
     public TelaPrincipal(String nomeUsuario, int idUsuario) {
-        super("Gestão de Espaços Academicos");
+        super("Gestão de Espaços Acadêmicos");
         this.nomeUsuario = nomeUsuario;
         this.idUsuario = idUsuario;
+        Main.setIcon(this);
         configurarJanela();
         configurarPaineis();
         montarLayout();
         configNavBar();
         registrarPaineis();
         this.setVisible(true);
-
     }
 
     public void configurarJanela() {
         this.setSize(900, 600);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-        //Centraliza na tela ao rodar
-        this.setLocationRelativeTo(null);
+        this.setLocationRelativeTo(null); // Centraliza na tela
     }
 
     public void configurarPaineis() {
-
         this.setLayout(new BorderLayout());
-        //Criando a instancia dos paineis
         navBar = new JPanel();
         navBar.setBackground(new Color(45, 65, 95));
         navBar.setPreferredSize(new Dimension(this.getWidth(), 60));
-        navBar.setLayout((new BorderLayout()));
-
+        navBar.setLayout(new BorderLayout());
 
         menuLateral = new JPanel();
         menuLateral.setLayout(new BoxLayout(menuLateral, BoxLayout.Y_AXIS));
         painelPrincipal = new JPanel(new CardLayout());
         painelPrincipal.setBackground(Color.WHITE);
-        
-        String[] nomes = { "Home", "Gerenciar Espaços", "Reservas", "Usuários", "Relatórios", "Logs", "Sair"};
 
-        Color corFundo = new Color(247, 249, 252); // mesma do menu
+        String[] nomes = { "Home", "Gerenciar Espaços", "Reservas", "Usuários", "Relatórios", "Logs", "Sair" };
+        Color corFundo = new Color(247, 249, 252);
 
-        for(String nome : nomes) {
+        for (String nome : nomes) {
             JButton btn = criarBotaoMenu(nome, corFundo);
 
-            // Efeito hover
             btn.addMouseListener(new java.awt.event.MouseAdapter() {
                 public void mouseEntered(java.awt.event.MouseEvent evt) {
                     btn.setBackground(new Color(230, 235, 245));
                 }
+
                 public void mouseExited(java.awt.event.MouseEvent evt) {
                     if (btn != botaoAtivo) {
                         btn.setBackground(corFundo);
@@ -88,15 +84,30 @@ public class TelaPrincipal extends JFrame{
                 }
             });
 
-            // Evento de clique: marcar como ativo
             btn.addActionListener(evt -> {
+                if (nome.equals("Sair")) {
+                    int opcao = JOptionPane.showConfirmDialog(
+                        this, 
+                        "Tem certeza que deseja sair?",
+                        "Confirmação de saída",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE
+                    );
+                    if (opcao == JOptionPane.YES_OPTION) {
+                        this.dispose();
+                        TelaLogin novaTelaLogin = new TelaLogin();
+                        new EntrarController(novaTelaLogin, new UsuarioDAO());
+                        novaTelaLogin.setVisible(true);
+                        return;
+                    }
+                }
 
-                if(nome.equals("Sair")) {
-                    this.dispose(); //Fecha a tela principal
-                    TelaLogin novaTelaLogin = new TelaLogin();
-                    new EntrarController(novaTelaLogin, new UsuarioDAO());
-                    novaTelaLogin.setVisible(true);
-                    return;
+                if (nome.equals("Home")){
+                    home.atualizarDados();
+                }
+
+                if (nome.equals("Reservas")){
+                    painelReservas.atualizarReservas();
                 }
 
                 if (botaoAtivo != null) {
@@ -115,24 +126,20 @@ public class TelaPrincipal extends JFrame{
                 }
             });
 
-                menuLateral.add(btn);
-                menuLateral.add(Box.createVerticalStrut(10));
-
+            menuLateral.add(btn);
+            menuLateral.add(Box.createVerticalStrut(10));
         }
     }
 
     public void montarLayout() {
         menuLateral.setBackground(new Color(247, 249, 252));
         painelPrincipal.setBackground(Color.WHITE);
-
         menuLateral.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-        //Layout fixo: menu a esquerda, conteudo no centro
         menuLateral.setPreferredSize(new Dimension(200, 0));
+
         this.add(menuLateral, BorderLayout.WEST);
         this.add(painelPrincipal, BorderLayout.CENTER);
-        this.add(navBar,BorderLayout.NORTH);
-
+        this.add(navBar, BorderLayout.NORTH);
     }
 
     private JButton criarBotaoMenu(String texto, Color corFundo) {
@@ -176,42 +183,40 @@ public class TelaPrincipal extends JFrame{
 
         navBar.add(painelEsquerdo, BorderLayout.WEST);
         navBar.add(painelDireito, BorderLayout.EAST);
-
     }
 
     public void registrarPaineis() {
-        painelReservas = new PainelReservas();
-    
+        painelReservas = new PainelReservas(idUsuario, nomeUsuario, () -> new TelaNovaReserva(this, idUsuario, () -> painelReservas.atualizarReservas()));
         CardLayout layout = (CardLayout) painelPrincipal.getLayout();
-        Map<String, Runnable> acoesHome = new HashMap<>();
 
+        Map<String, Runnable> acoesHome = new HashMap<>();
         acoesHome.put("Reservas", () -> layout.show(painelPrincipal, "Reservas"));
         acoesHome.put("Gerenciar Espaços", () -> layout.show(painelPrincipal, "Gerenciar Espaços"));
         acoesHome.put("Usuários", () -> layout.show(painelPrincipal, "Usuários"));
 
-        painelReservas = new PainelReservas();
-        PainelHome home = new PainelHome(nomeUsuario, idUsuario, 
-            () -> new TelaNovaReserva(this, idUsuario, () -> painelReservas.atualizarReservas()), 
-            acoesHome // Passa o mapa de ações
+        this.home = new PainelHome(
+            nomeUsuario,
+            idUsuario,
+            acoesHome
         );
-      
+
         PainelUsuarios painelUsuarios = new PainelUsuarios(this.nomeUsuario);
         UsuarioDAO dao = new UsuarioDAO();
-
         new PainelUsuariosController(painelUsuarios, dao);
 
-        
+        PainelGerenciarEspacos painelGerenciarEspacos = PainelGerenciarEspacos.criarComController(nomeUsuario);
+
         painelRegistradores.put("Home", home);
-        painelRegistradores.put("Gerenciar Espaços", new PainelGerenciarEspacos());
+        painelRegistradores.put("Gerenciar Espaços", painelGerenciarEspacos);
         painelRegistradores.put("Reservas", painelReservas);
         painelRegistradores.put("Usuários", painelUsuarios);
         painelRegistradores.put("Relatórios", new PainelRelatorios());
         painelRegistradores.put("Logs", new PainelLogs());
 
-        for(Map.Entry<String, JPanel> entry: painelRegistradores.entrySet()) {
+        for (Map.Entry<String, JPanel> entry : painelRegistradores.entrySet()) {
             painelPrincipal.add(entry.getValue(), entry.getKey());
         }
-        
+
         layout.show(painelPrincipal, "Home");
     }
 }

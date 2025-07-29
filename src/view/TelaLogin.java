@@ -10,6 +10,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
+import App.Main;
+
 import java.awt.Component;
 import java.awt.event.ActionListener;
 
@@ -17,7 +20,7 @@ import java.awt.event.ActionListener;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
+import java.awt.Font; 
 
 public class TelaLogin extends JFrame {
     private JPanel topoAzul;
@@ -29,10 +32,12 @@ public class TelaLogin extends JFrame {
 
     public TelaLogin() {
         super("Login");
+        Main.setIcon(this);
         configurarTelaLogin();
         configuraPainel();
         configurarComponentes();
         this.getRootPane().setDefaultButton(botaoEntrar); 
+        this.setVisible(true);
     }
     
 

@@ -7,17 +7,20 @@ import java.util.List;
 
 public class ReservaController {
     private ReservaDAO dao;
-    private RelatorioController relatorioController;
 
     public ReservaController() {
         this.dao = new ReservaDAO();
     }
 
     public boolean realizarReserva(Reserva reserva) {
-        return dao.salvarReserva(reserva); // você pode colocar validações aqui depois
+        return dao.salvarReserva(reserva);
     }
 
     public List<Reserva> listarReservas() {
         return dao.listar();
+    }
+
+    public boolean removerReserva(int idReserva) {
+        return new ReservaDAO().remover(idReserva);
     }
 }

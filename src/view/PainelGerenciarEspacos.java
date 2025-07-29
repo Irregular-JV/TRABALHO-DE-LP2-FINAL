@@ -1,87 +1,89 @@
 package view;
 
 import java.awt.*;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import controller.EspacoController;
 
-public class PainelGerenciarEspacos extends JPanel  {
+
+public class PainelGerenciarEspacos extends JPanel {
     private JTable tabela;
     private DefaultTableModel modeloTabela;
-    private controller.EspacoController controller = new controller.EspacoController();
     private JLabel labelInfo;
+    private controller.EspacoController controller;
+    private java.util.List<model.Espaco> listaEspacos = new java.util.ArrayList<>();
+    private String nome;
 
-    public PainelGerenciarEspacos() {
-      this.setLayout(new BorderLayout());
-      this.setBackground(Color.WHITE);
-
-      configurarTopo();
-      ConfigurarTabela();
-      configurarRodape();
+    // Construtor vazio
+    public PainelGerenciarEspacos(String nome) {
+        this.setLayout(new BorderLayout());
+        this.setBackground(Color.WHITE);
+        this.nome = nome;
     }
 
+    // Método para associar o controller e configurar a interface
+    public void setController(controller.EspacoController controller) {
+        this.controller = controller;
+        configurarTopo();
+        ConfigurarTabela();
+        configurarRodape();
+    }
 
-    public void configurarTopo(){
+    // Método de fábrica que cria o painel com controller integrado
+    public static PainelGerenciarEspacos criarComController(String nome) {
+        PainelGerenciarEspacos painel = new PainelGerenciarEspacos(nome);
+        controller.EspacoController controller = new controller.EspacoController(painel);
+        painel.setController(controller);
+        return painel;
+    }
+
+    public void configurarTopo() {
         JPanel painelTopo = new JPanel();
         painelTopo.setLayout(new BoxLayout(painelTopo, BoxLayout.Y_AXIS));
-
         painelTopo.setBackground(Color.WHITE);
         painelTopo.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JPanel linhaBusca = new JPanel();
         linhaBusca.setLayout(new BoxLayout(linhaBusca, BoxLayout.X_AXIS));
-        linhaBusca.setBackground(Color.WHITE); // manter o fundo
+        linhaBusca.setBackground(Color.WHITE);
         linhaBusca.setAlignmentX(LEFT_ALIGNMENT);
 
-
-        JLabel buscaMsg = new JLabel("Buscar por nome ou id");
+        JLabel buscaMsg = new JLabel("Gerenciar Espaços");
         buscaMsg.setFont(new Font("SansSerif", Font.BOLD, 22));
         buscaMsg.setAlignmentX(LEFT_ALIGNMENT);
 
-        JTextField campoBusca = new JTextField(20);
-        JButton btnBuscar = new JButton("Buscar");
+        // JTextField campoBusca = new JTextField(20);
+        // JButton btnBuscar = new JButton("Buscar");
+        // btnBuscar.setFocusPainted(false);
+        // btnBuscar.setFont(new Font("SansSerif", Font.BOLD, 16));
+        // btnBuscar.setForeground(Color.black);
+        // btnBuscar.setBackground(Color.WHITE);
+        // btnBuscar.setBorder(BorderFactory.createCompoundBorder(
+        //     BorderFactory.createLineBorder(Color.black, 1, true),
+        //     BorderFactory.createEmptyBorder(5, 30, 5, 30)
+        // ));
 
-        btnBuscar.setFocusPainted(false);
-        btnBuscar.setFont(new Font("SansSerif", Font.BOLD, 16));
-        btnBuscar.setForeground(Color.black);
-        btnBuscar.setBackground(Color.WHITE);
-        btnBuscar.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(Color.black, 1, true),
-            BorderFactory.createEmptyBorder(5, 30, 5, 30)
-        ));
-
-
-
-        campoBusca.setMaximumSize(new java.awt.Dimension(500, 105));
-        linhaBusca.add(campoBusca);
-        linhaBusca.add(Box.createHorizontalStrut(15));
-        linhaBusca.add(btnBuscar);
+        // campoBusca.setMaximumSize(new Dimension(500, 105));
+        // linhaBusca.add(campoBusca);
+        // linhaBusca.add(Box.createHorizontalStrut(15));
+        // linhaBusca.add(btnBuscar);
 
         painelTopo.add(buscaMsg);
-        painelTopo.add(Box.createVerticalStrut(5)); // espaçamento
+        painelTopo.add(Box.createVerticalStrut(5));
         painelTopo.add(linhaBusca);
-
         this.add(painelTopo, BorderLayout.NORTH);
     }
 
     public void ConfigurarTabela() {
-        //Modelo para visualização
-        String[] colunas = {"Nome", "Tipo", "Capacidade"};
-        modeloTabela = new DefaultTableModel(new String[] {"Nome", "Tipo", "Capacidade"}, 0);
+        modeloTabela = new DefaultTableModel(new String[]{"Nome", "Tipo", "Capacidade"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
         tabela = new JTable(modeloTabela);
-
-
         JScrollPane scrol = new JScrollPane(tabela);
 
         JPanel tabelaEspaco = new JPanel();
@@ -91,60 +93,59 @@ public class PainelGerenciarEspacos extends JPanel  {
 
         tabela.setRowHeight(30);
         tabela.setFont(new Font("SansSerif", Font.PLAIN, 16));
-
-
         tabela.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 16));
-        tabela.getTableHeader().setReorderingAllowed(false); // impedir mover colunas
+        tabela.getTableHeader().setReorderingAllowed(false);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        tabela.getColumnModel().getColumn(0).setCellRenderer(centerRenderer); // ID
+        tabela.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
 
         tabela.setShowGrid(false);
         tabela.setIntercellSpacing(new Dimension(0, 0));
-
         tabela.setBackground(Color.WHITE);
         tabela.getTableHeader().setBackground(Color.WHITE);
-
 
         tabelaEspaco.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         tabelaEspaco.add(scrol);
 
-       
-        JPanel painelBotoes = new JPanel();
-        painelBotoes.setLayout(new FlowLayout(FlowLayout.LEFT));
+        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.LEFT));
         painelBotoes.setBackground(Color.white);
 
-        JButton btnNovoEspaco = btnTabel("Novo Espaco");
 
+        if(nome.equals("admin")) {
+            JButton btnNovoEspaco = btnTabel("Novo Espaco");
+            btnNovoEspaco.setActionCommand("novo_espaco");
+            btnNovoEspaco.addActionListener(controller);
+            painelBotoes.add(btnNovoEspaco);
+            
+            JButton btnRemover = btnTabel("Remover Espaço");
+            btnRemover.setActionCommand("remover_espaco");
+            btnRemover.addActionListener(controller);
+            painelBotoes.add(btnRemover);
 
-        btnNovoEspaco.addActionListener(e -> abrirDialogNovoEspaco());
-
-
-        painelBotoes.add(btnNovoEspaco);
-        painelBotoes.add(btnTabel("Editar Espaço"));
-        painelBotoes.add(btnTabel("Remover Espaço"));
-
-        tabelaEspaco.add(Box.createVerticalStrut(20)); // espaçamento opcional
-        tabelaEspaco.add(painelBotoes); // adiciona os botões ao painel
+            tabelaEspaco.add(Box.createVerticalStrut(20));
+            tabelaEspaco.add(painelBotoes);
+        }
 
         this.add(tabelaEspaco, BorderLayout.CENTER);
 
-        java.util.List<model.Espaco> espacos = controller.listarTodos();
-        for (model.Espaco esp : espacos) {
-            modeloTabela.addRow(new Object[] {
-                esp.getLocalizacao(),
-                esp.getClass().getSimpleName(),
-                esp.getCapacidade()
-            });
-}
+        recarregarTabela();
 
+        tabela.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 2 && tabela.getSelectedRow() != -1) {
+                    int row = tabela.getSelectedRow();
+                    model.Espaco espacoSelecionado = listaEspacos.get(row);
+                    mostrarDetalhesEspaco(espacoSelecionado);
+                }
+            }
+        });
     }
 
     public void configurarRodape() {
         JPanel rodape = new JPanel(new FlowLayout(FlowLayout.LEFT));
         rodape.setBackground(Color.WHITE);
-        rodape.setBorder((BorderFactory.createEmptyBorder(10, 20, 10, 20)));
+        rodape.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
         labelInfo = new JLabel(modeloTabela.getRowCount() + " espaços encontrados");
         rodape.add(labelInfo);
@@ -166,35 +167,12 @@ public class PainelGerenciarEspacos extends JPanel  {
         return btn;
     }
 
-    public void abrirDialogNovoEspaco() {
-        JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        DialogNovoEspaco dialog = new DialogNovoEspaco(parentFrame);
-        dialog.setVisible(true);
-
-        try {
-            model.Espaco espaco = dialog.getEspacoCriado(); // vai lançar exceção se usuário cancelar ou errar
-
-           controller.salvar(espaco);// salva no SQLite
-           recarregarTabela(); // recarrega a tabela toda
-
-            modeloTabela.addRow(new Object[] {
-                espaco.getLocalizacao(),
-                espaco.getClass().getSimpleName(),
-                espaco.getCapacidade()
-            });
-
-        } catch (Exception e) {
-            // Sem problema — o usuário pode ter cancelado
-            System.out.println("Criação de espaço cancelada ou inválida.");
-        }
-    }
-
     public void recarregarTabela() {
-        modeloTabela.setRowCount(0); // limpa a tabela
+        modeloTabela.setRowCount(0);
+        listaEspacos = controller.listarTodos();
 
-        java.util.List<model.Espaco> espacos = controller.listarTodos();
-        for (model.Espaco esp : espacos) {
-            modeloTabela.addRow(new Object[] {
+        for (model.Espaco esp : listaEspacos) {
+            modeloTabela.addRow(new Object[]{
                 esp.getLocalizacao(),
                 esp.getClass().getSimpleName(),
                 esp.getCapacidade()
@@ -202,12 +180,44 @@ public class PainelGerenciarEspacos extends JPanel  {
         }
 
         if (labelInfo != null) {
-            labelInfo.setText(modeloTabela.getRowCount() + " espaços encontrados");
+            labelInfo.setText(listaEspacos.size() + " espaços encontrados");
         }
     }
 
+    public void mostrarDetalhesEspaco(model.Espaco espaco) {
+        StringBuilder detalhes = new StringBuilder();
+        detalhes.append("Nome: ").append(espaco.getLocalizacao()).append("\n");
+        detalhes.append("Capacidade: ").append(espaco.getCapacidade()).append("\n");
+        detalhes.append("Tipo: ").append(espaco.getClass().getSimpleName()).append("\n");
 
+        if (espaco instanceof model.Laboratorio lab) {
+            detalhes.append("Tipo do Laboratório: ").append(lab.getTipoLaboratorio()).append("\n");
+            detalhes.append("Qtd. Computadores: ").append(lab.getQuantidadeComputadores()).append("\n");
+        } else if (espaco instanceof model.Auditorio aud) {
+            detalhes.append("Possui Palco: ").append(aud.getPossuiPalco() ? "Sim" : "Não").append("\n");
+        } else if (espaco instanceof model.Quadra quadra) {
+            detalhes.append("Esporte: ").append(quadra.getTipoEsporte()).append("\n");
+            detalhes.append("Tipo de Piso: ").append(quadra.getTipoPiso()).append("\n");
+        } else if (espaco instanceof model.SalaDeReuniao sala) {
+            detalhes.append("Tipo de Mesa: ").append(sala.getTipoMesa()).append("\n");
+        } else if (espaco instanceof model.SalaDeAula sala) {
+            detalhes.append("Qtd Carteiras: ").append(sala.getQuantidadeCarteiras()).append("\n");
+        }
 
+        JOptionPane.showMessageDialog(this, detalhes.toString(),
+            "Detalhes do Espaço", JOptionPane.INFORMATION_MESSAGE);
+    }
 
-    
+    public JTable getTabela() {
+        return tabela;
+    }
+
+    public int getEspacoSelecionadoId(int linha) {
+        return listaEspacos.get(linha).getId();
+    }
+
+    public EspacoController getController() {
+        return controller;
+    }
+
 }
