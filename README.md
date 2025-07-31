@@ -1,4 +1,4 @@
-# 🚀 Sistema de Gestão de Espaços Acadêmicos (SIGA)
+# 🚀 Sistema de Gestão de Espaços Acadêmicos (SGEA)
 
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
 ![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)
